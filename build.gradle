@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.10'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.blogType'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //data-jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //spring boot starter
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    //Mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    //test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //실행 파라미터를 로그를 통해 직접 확인할 수 있다.
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+    //gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+    //jwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    //swagger
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    // mapping
+    implementation 'org.modelmapper:modelmapper:2.3.7'
+    //security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
