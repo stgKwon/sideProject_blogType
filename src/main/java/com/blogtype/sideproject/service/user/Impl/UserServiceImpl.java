@@ -6,8 +6,6 @@ import com.blogtype.sideproject.model.user.User;
 import com.blogtype.sideproject.repository.user.UserRepository;
 import com.blogtype.sideproject.service.user.UserService;
 import com.blogtype.sideproject.util.security.jwt.JwtTokenProvider;
-import com.blogtype.sideproject.util.security.jwt.TokenDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

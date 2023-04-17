@@ -14,4 +14,13 @@ public class Board {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+
+    @Column
+    private String boardTitle;
+
+    @Column
+    private Long contents;
+
+    @Column
+    private Long userId;
 }
