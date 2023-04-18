@@ -7,6 +7,8 @@ import com.blogtype.sideproject.service.board.BoardService;
 import com.blogtype.sideproject.util.convert.ConvertUtil;
 import com.blogtype.sideproject.util.response.ResponseUtils;
 import com.blogtype.sideproject.util.security.UserDetailsImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +25,45 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
     @GetMapping("/list")
     @ApiOperation(value = "블로그 전체 목록 조회" , notes = "전체 블로그 내용을 조회한다.")
-    public ResponseEntity<ResponseDTO> findAllBoardListByUserId(@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
-        log.info("[findListByAll] checkUserId:" + userDetails.getUser().getId());
-        List<BoardDTO.ResponseDto> resultList = boardService.findAllBoardListByUserId(ConvertUtil.findUserId(userDetails));
+    public ResponseEntity<ResponseDTO> findAllBoardList() throws Exception {
+        List<BoardDTO.ResponseDto> resultList = boardService.findAllBoardList();
         return ResponseUtils.ok(resultList);
     }
+
+    @GetMapping("/detail")
+    @ApiOperation(value = "블로그 게시글 조회" , notes = "선택 블로그 내용을 조회한다.")
+    public ResponseEntity<ResponseDTO> findBoard() throws Exception {
+        return ResponseUtils.ok(null);
+    }
+
+    @PostMapping("/create")
+    @ApiOperation(value = "블로그 게시글 생성" , notes = "블로그 게시글을 생성한다.")
+    public ResponseEntity<ResponseDTO> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, BoardDTO.RequestDto requestDto) throws Exception {
+        log.info("[BoardController] createBoard_checkUserId: " + userDetails.getUser().getId());
+        log.info("[BoardController] createBoard_requestDto: " + writer.writeValueAsString(requestDto));
+        return ResponseUtils.ok(null);
+    }
+
+    @PatchMapping("/modify/{boardId}")
+    @ApiOperation(value = "블로그 게시글 수정" , notes = "선택 블로그 내용을 수정한다.")
+    public ResponseEntity<ResponseDTO> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") String boardId) throws Exception {
+        log.info("[BoardController] modifyBoard_checkUserId: " + userDetails.getUser().getId());
+        return ResponseUtils.ok(null);
+    }
+
+    @DeleteMapping("/delete/{boardId}")
+    @ApiOperation(value = "블로그 게시글 삭제" , notes = "선택 블로그 내용을 삭제한다.")
+    public ResponseEntity<ResponseDTO> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") String boardId) throws Exception {
+        log.info("[BoardController] deleteBoard_checkUserId: " + userDetails.getUser().getId());
+        return ResponseUtils.ok(null);
+    }
+
+
+
+
 
 }

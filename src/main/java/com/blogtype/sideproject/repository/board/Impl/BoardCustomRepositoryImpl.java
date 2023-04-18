@@ -18,7 +18,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     @Override
     @Transactional
-    public List<Board> findAllBoardListByUserId(Long userId) {
-        return entityManager.createQuery("SELECT b FROM Board AS b WHERE b.userId = :userId ", Board.class).getResultList();
+    public List<Board> findAllBoardList() {
+        return entityManager.createQuery("SELECT b FROM Board AS b", Board.class).getResultList();
     }
 }

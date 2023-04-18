@@ -2,7 +2,6 @@ package com.blogtype.sideproject.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 

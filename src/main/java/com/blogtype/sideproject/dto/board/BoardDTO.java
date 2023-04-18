@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ *  BLOG 게시글 관리
+ */
 public class BoardDTO {
 
     @Getter
@@ -16,8 +19,11 @@ public class BoardDTO {
     @Builder
     public static class RequestDto {
 
-        @ApiModelProperty(position = 1 , example ="idx",required = true)
-        private Long id;
+        @ApiModelProperty(position = 1 , example ="제목",required = true)
+        private String boardTitle;
+
+        @ApiModelProperty(position = 2 , example ="내용",required = true)
+        private String contents;
     }
 
     @Getter
