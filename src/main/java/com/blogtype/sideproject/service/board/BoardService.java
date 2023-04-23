@@ -14,7 +14,7 @@ public interface BoardService {
     /**
      * DESC :: 블로그 전체 목록 조회
      */
-    BoardDTO.ResponseDto findBoard() throws Exception;
+    BoardDTO.ResponseDto findBoard(Long userId, Long boardId) throws Exception;
 
     /**
      * DESC :: 블로그 게시글 생성

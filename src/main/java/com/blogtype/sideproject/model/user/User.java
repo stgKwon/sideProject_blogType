@@ -1,6 +1,7 @@
 package com.blogtype.sideproject.model.user;
 
 
+import com.blogtype.sideproject.dto.user.UserDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,8 +21,16 @@ public class User {
     private Long kakaoId;
 
     @Column
-    private Long userName;
+    private String userName;
 
     @Column
-    private Long email;
+    private String email;
+
+    public static User createUser(UserDTO.KakaoUserInfo userInfo){
+        return User.builder()
+                .kakaoId(userInfo.getKakaoId())
+                .userName(userInfo.getUserName())
+                .email(userInfo.getEmail())
+                .build();
+    }
 }

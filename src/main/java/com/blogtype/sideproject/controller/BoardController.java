@@ -27,6 +27,8 @@ public class BoardController {
     private final BoardService boardService;
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
+    /** FIXME :: userDetails -> AOP 처리 수정 필요 **/
+
     @GetMapping("/list")
     @ApiOperation(value = "블로그 전체 목록 조회" , notes = "전체 블로그 내용을 조회한다.")
     public ResponseEntity<ResponseDTO> findAllBoardList() throws Exception {
@@ -34,10 +36,11 @@ public class BoardController {
         return ResponseUtils.ok(resultList);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/detail/{boardId}")
     @ApiOperation(value = "블로그 게시글 조회" , notes = "선택 블로그 내용을 조회한다.")
-    public ResponseEntity<ResponseDTO> findBoard() throws Exception {
-        return ResponseUtils.ok(null);
+    public ResponseEntity<ResponseDTO> findBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
+        BoardDTO.ResponseDto result = boardService.findBoard(ConvertUtil.findUserId(userDetails),boardId);
+        return ResponseUtils.ok(result);
     }
 
     @PostMapping("/create")
@@ -45,19 +48,20 @@ public class BoardController {
     public ResponseEntity<ResponseDTO> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, BoardDTO.RequestDto requestDto) throws Exception {
         log.info("[BoardController] createBoard_checkUserId: " + userDetails.getUser().getId());
         log.info("[BoardController] createBoard_requestDto: " + writer.writeValueAsString(requestDto));
-        return ResponseUtils.ok(null);
+        int result = boardService.createBoard(ConvertUtil.findUserId(userDetails),requestDto);
+        return ResponseUtils.ok(result);
     }
 
     @PatchMapping("/modify/{boardId}")
     @ApiOperation(value = "블로그 게시글 수정" , notes = "선택 블로그 내용을 수정한다.")
-    public ResponseEntity<ResponseDTO> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") String boardId) throws Exception {
+    public ResponseEntity<ResponseDTO> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
         log.info("[BoardController] modifyBoard_checkUserId: " + userDetails.getUser().getId());
         return ResponseUtils.ok(null);
     }
 
     @DeleteMapping("/delete/{boardId}")
     @ApiOperation(value = "블로그 게시글 삭제" , notes = "선택 블로그 내용을 삭제한다.")
-    public ResponseEntity<ResponseDTO> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") String boardId) throws Exception {
+    public ResponseEntity<ResponseDTO> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
         log.info("[BoardController] deleteBoard_checkUserId: " + userDetails.getUser().getId());
         return ResponseUtils.ok(null);
     }

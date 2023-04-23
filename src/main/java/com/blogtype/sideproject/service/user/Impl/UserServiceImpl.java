@@ -29,7 +29,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -43,28 +42,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseDTO kakaoLogin(String code) throws Exception {
-        ResponseDTO responseDto = new ResponseDTO();
-
+    public UserDTO.ResponseDto kakaoLogin(String code) throws Exception {
+        UserDTO.ResponseDto result = new UserDTO.ResponseDto();
         try {
+            /*
+                FIXME :: SNS 로그인 토큰 처리 방식에 대하여 다시 생각이 필요하다.
+             */
+
             // '인가 코드' 로 '엑세스 토큰' 요청.
             String accessToken = getAccessToken(code);
-            // 토큰으로 카카오 API 호출
-            UserDTO.kakaoUserInfo userInfo = getKakaoUserInfo(accessToken);
+            // 유저정보 호출
+            UserDTO.KakaoUserInfo userInfo = getKakaoUserInfo(accessToken);
             // DB 에 중복된 KakaoId 가 있는지 확인
             Optional<User> findUserByKakaoId = userRepository.findAllByKakaoId(userInfo.getKakaoId());
             // 중복 id 값 존재 확인
-            if (findUserByKakaoId.isPresent()){
-
-            }else {
-
+            if (!findUserByKakaoId.isPresent()) {
+                User user = User.createUser(userInfo);
+                userRepository.save(user);
             }
 
-        }catch(Exception e){
-            log.error("[kakaoLogin] :: " , e);
-        }
+            Optional<User> findUserOptional = userRepository.findAllByKakaoId(userInfo.getKakaoId());
+            findUserOptional.ifPresent(user -> result.setAccessToken(jwtTokenProvider.createToken(user).getAccessToken()));
 
-        return responseDto;
+        }catch(Exception e){
+            log.error("[UserService] kakaoLogin :: " , e);
+        }
+        return result;
     }
 
     private String getAccessToken(String code) throws Exception {
@@ -104,9 +107,9 @@ public class UserServiceImpl implements UserService {
     }
 
     // 유저 정보
-    private UserDTO.kakaoUserInfo getKakaoUserInfo(String accessToken) throws Exception {
+    private UserDTO.KakaoUserInfo getKakaoUserInfo(String accessToken) throws Exception {
 
-        UserDTO.kakaoUserInfo userInfo = new UserDTO.kakaoUserInfo();
+        UserDTO.KakaoUserInfo userInfo = new UserDTO.KakaoUserInfo();
 
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();

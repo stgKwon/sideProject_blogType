@@ -47,9 +47,9 @@ public class JwtTokenProvider {
     headers.put("typ", "JWT");
 
     Claims claims = Jwts.claims().setSubject(String.valueOf(user.getId()));
-//    claims.put("kakaoId", user.getKakaoId());
-//    claims.put("username", user.getUsername());
-//    claims.put("email", user.getEmail());
+    claims.put("kakaoId", user.getKakaoId());
+    claims.put("username", user.getUserName());
+    claims.put("email", user.getEmail());
 
     Date now = new Date();
 

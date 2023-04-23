@@ -11,14 +11,19 @@ import java.util.List;
 
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     private final EntityManager entityManager;
 
     @Override
-    @Transactional
     public List<Board> findAllBoardList() {
         return entityManager.createQuery("SELECT b FROM Board AS b", Board.class).getResultList();
+    }
+
+    @Override
+    public Board findBoard(Long userId, Long boardId) {
+        return entityManager.createQuery("SELECT b FROM Board AS b WHERE b.Id =:boardId AND b.userId =:userId",Board.class).getSingleResult();
     }
 }

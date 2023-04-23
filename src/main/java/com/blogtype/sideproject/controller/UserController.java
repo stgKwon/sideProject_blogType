@@ -1,7 +1,9 @@
 package com.blogtype.sideproject.controller;
 
 
+import com.blogtype.sideproject.dto.user.UserDTO;
 import com.blogtype.sideproject.dto.util.ResponseDTO;
+import com.blogtype.sideproject.service.user.UserService;
 import com.blogtype.sideproject.util.response.ResponseUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,14 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
 
+    private final UserService userService;
+
     //카카오 로그인 API 테스트
     @PostMapping("/kakao/login")
     @ApiOperation(value = "카카오 로그인" , notes = "카카오톡 로그인 테스트 , 발급받은 인가코드를 파라미터로 전달받는다.")
     @ApiParam(value = "code" , example = "발급받은 인가코드" , required = true)
     public ResponseEntity<ResponseDTO> kakaoLogin(@RequestParam(name = "code") String code) throws Exception {
         log.info("[kakaoLogin] checkParam:" + code );
-
-        return ResponseUtils.ok(null);
+        UserDTO.ResponseDto result = userService.kakaoLogin(code);
+        return ResponseUtils.ok(result);
     }
 
 

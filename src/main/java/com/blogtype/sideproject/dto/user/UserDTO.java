@@ -26,15 +26,23 @@ public class UserDTO {
     @Builder
     public static class ResponseDto implements Serializable {
 
+
         @ApiModelProperty(position = 1 , example ="idx",required = true)
-        private Long id;
+        private String accessToken;
+
+        public UserDTO.ResponseDto setAccessToken(String accessToken){
+            return ResponseDto.builder()
+                    .accessToken(accessToken)
+                    .build();
+        }
+
     }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class kakaoUserInfo {
+    public static class KakaoUserInfo {
 
         @ApiModelProperty(position = 1 , example ="110110",required = true)
         private Long kakaoId;
@@ -43,8 +51,8 @@ public class UserDTO {
         @ApiModelProperty(position = 3 , example ="email@email.com",required = true)
         private String email;
 
-        public UserDTO.kakaoUserInfo setUserInfo(Long kakaoId , String userName , String email){
-           return UserDTO.kakaoUserInfo.builder()
+        public UserDTO.KakaoUserInfo setUserInfo(Long kakaoId , String userName , String email){
+           return UserDTO.KakaoUserInfo.builder()
                     .kakaoId(kakaoId)
                     .userName(userName)
                     .email(email)
