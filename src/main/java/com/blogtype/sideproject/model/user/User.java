@@ -26,6 +26,9 @@ public class User {
     @Column
     private String email;
 
+    @Column
+    private String profileImgUrl;
+
     public static User createUser(UserDTO.KakaoUserInfo userInfo){
         return User.builder()
                 .kakaoId(userInfo.getKakaoId())

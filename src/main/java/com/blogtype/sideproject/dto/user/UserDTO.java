@@ -30,9 +30,32 @@ public class UserDTO {
         @ApiModelProperty(position = 1 , example ="idx",required = true)
         private String accessToken;
 
-        public UserDTO.ResponseDto setAccessToken(String accessToken){
-            return ResponseDto.builder()
-                    .accessToken(accessToken)
+        public void setAccessToken(String accessToken){
+            ResponseDto.builder().accessToken(accessToken).build();
+        }
+
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ResponseUserInfo implements Serializable {
+
+        @ApiModelProperty(position = 1 , example ="idx",required = true)
+        private Long userId;
+
+        @ApiModelProperty(position = 2 , example ="userName",required = true)
+        private String userName;
+
+        @ApiModelProperty(position = 3 , example ="imageUrl",required = true)
+        private String profileImgUrl;
+
+        public void setUserInfo(Long userId, String userName, String profileImgUrl){
+            ResponseUserInfo.builder()
+                    .userId(userId)
+                    .userName(userName)
+                    .profileImgUrl(profileImgUrl)
                     .build();
         }
 
@@ -51,8 +74,8 @@ public class UserDTO {
         @ApiModelProperty(position = 3 , example ="email@email.com",required = true)
         private String email;
 
-        public UserDTO.KakaoUserInfo setUserInfo(Long kakaoId , String userName , String email){
-           return UserDTO.KakaoUserInfo.builder()
+        public void setUserInfo(Long kakaoId , String userName , String email){
+            KakaoUserInfo.builder()
                     .kakaoId(kakaoId)
                     .userName(userName)
                     .email(email)

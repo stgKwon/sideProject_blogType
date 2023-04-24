@@ -9,4 +9,9 @@ public interface UserService {
      */
     UserDTO.ResponseDto kakaoLogin(String code) throws Exception;
 
+    /**
+     * DESC :: 회원 정보 조회
+     */
+    UserDTO.ResponseUserInfo findUserInfo(Long userId) throws Exception;
+
 }

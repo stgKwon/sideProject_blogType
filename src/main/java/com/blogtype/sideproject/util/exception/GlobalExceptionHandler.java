@@ -1,6 +1,6 @@
 package com.blogtype.sideproject.util.exception;
 
-import com.blogtype.sideproject.dto.util.ResponseDTO;
+import com.blogtype.sideproject.dto.common.ResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

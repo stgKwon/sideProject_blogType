@@ -2,7 +2,7 @@ package com.blogtype.sideproject.controller;
 
 
 import com.blogtype.sideproject.dto.board.BoardDTO;
-import com.blogtype.sideproject.dto.util.ResponseDTO;
+import com.blogtype.sideproject.dto.common.ResponseDTO;
 import com.blogtype.sideproject.service.board.BoardService;
 import com.blogtype.sideproject.util.convert.ConvertUtil;
 import com.blogtype.sideproject.util.response.ResponseUtils;

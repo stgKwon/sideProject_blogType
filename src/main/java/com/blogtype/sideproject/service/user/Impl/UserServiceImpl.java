@@ -1,7 +1,7 @@
 package com.blogtype.sideproject.service.user.Impl;
 
+import com.blogtype.sideproject.dto.board.BoardDTO;
 import com.blogtype.sideproject.dto.user.UserDTO;
-import com.blogtype.sideproject.dto.util.ResponseDTO;
 import com.blogtype.sideproject.model.user.User;
 import com.blogtype.sideproject.repository.user.UserRepository;
 import com.blogtype.sideproject.service.user.UserService;
@@ -10,12 +10,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,10 +27,12 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ModelMapper modelMapper;
 
     @Value("${client_id}")
     private String client_id;
@@ -40,8 +42,8 @@ public class UserServiceImpl implements UserService {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+
     @Override
-    @Transactional
     public UserDTO.ResponseDto kakaoLogin(String code) throws Exception {
         UserDTO.ResponseDto result = new UserDTO.ResponseDto();
         try {
@@ -70,6 +72,26 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public UserDTO.ResponseUserInfo findUserInfo(Long userId) throws Exception {
+
+        UserDTO.ResponseUserInfo result = new UserDTO.ResponseUserInfo();
+        try{
+            Optional<User> findUserById = userRepository.findUser(userId);
+            if (findUserById.isPresent()){
+                result = modelMapper.map(findUserById, UserDTO.ResponseUserInfo.class);
+            }
+
+        }catch (Exception e){
+            log.error("[UserService] findUserInfo :: " , e);
+        }
+        return result;
+    }
+
+
+
+
+    // 카카오 접근 토큰 발급 요청
     private String getAccessToken(String code) throws Exception {
 
         String accessToken = "";
@@ -143,4 +165,10 @@ public class UserServiceImpl implements UserService {
         }
         return userInfo;
     }
+
+
+
+
+
+
 }

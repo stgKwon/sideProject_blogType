@@ -1,4 +1,4 @@
-package com.blogtype.sideproject.dto.util;
+package com.blogtype.sideproject.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
