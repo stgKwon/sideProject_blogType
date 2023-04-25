@@ -1,5 +1,6 @@
 package com.blogtype.sideproject.dto.board;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,10 @@ import java.io.Serializable;
 /**
  *  BLOG 게시글 관리
  */
+@ApiModel(description = "게시글 관련 요청/ 응답 관리 Dto")
 public class BoardDTO {
+
+    //FIXME :: 요청, 응답부 분리 예정
 
     @Getter
     @AllArgsConstructor

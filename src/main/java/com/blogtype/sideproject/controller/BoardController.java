@@ -2,7 +2,7 @@ package com.blogtype.sideproject.controller;
 
 
 import com.blogtype.sideproject.dto.board.BoardDTO;
-import com.blogtype.sideproject.dto.common.ResponseDTO;
+import com.blogtype.sideproject.dto.common.ResponseDto;
 import com.blogtype.sideproject.service.board.BoardService;
 import com.blogtype.sideproject.util.convert.ConvertUtil;
 import com.blogtype.sideproject.util.response.ResponseUtils;
@@ -31,21 +31,21 @@ public class BoardController {
 
     @GetMapping("/list")
     @ApiOperation(value = "블로그 전체 목록 조회" , notes = "전체 블로그 내용을 조회한다.")
-    public ResponseEntity<ResponseDTO> findAllBoardList() throws Exception {
+    public ResponseEntity<ResponseDto> findAllBoardList() throws Exception {
         List<BoardDTO.ResponseDto> resultList = boardService.findAllBoardList();
         return ResponseUtils.ok(resultList);
     }
 
     @GetMapping("/detail/{boardId}")
     @ApiOperation(value = "블로그 게시글 조회" , notes = "선택 블로그 내용을 조회한다.")
-    public ResponseEntity<ResponseDTO> findBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
+    public ResponseEntity<ResponseDto> findBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
         BoardDTO.ResponseDto result = boardService.findBoard(ConvertUtil.findUserId(userDetails),boardId);
         return ResponseUtils.ok(result);
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "블로그 게시글 생성" , notes = "블로그 게시글을 생성한다.")
-    public ResponseEntity<ResponseDTO> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, BoardDTO.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, BoardDTO.RequestDto requestDto) throws Exception {
         log.info("[BoardController] createBoard_checkUserId: " + userDetails.getUser().getId());
         log.info("[BoardController] createBoard_requestDto: " + writer.writeValueAsString(requestDto));
         int result = boardService.createBoard(ConvertUtil.findUserId(userDetails),requestDto);
@@ -54,14 +54,14 @@ public class BoardController {
 
     @PatchMapping("/modify/{boardId}")
     @ApiOperation(value = "블로그 게시글 수정" , notes = "선택 블로그 내용을 수정한다.")
-    public ResponseEntity<ResponseDTO> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
+    public ResponseEntity<ResponseDto> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
         log.info("[BoardController] modifyBoard_checkUserId: " + userDetails.getUser().getId());
         return ResponseUtils.ok(null);
     }
 
     @DeleteMapping("/delete/{boardId}")
     @ApiOperation(value = "블로그 게시글 삭제" , notes = "선택 블로그 내용을 삭제한다.")
-    public ResponseEntity<ResponseDTO> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
+    public ResponseEntity<ResponseDto> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId) throws Exception {
         log.info("[BoardController] deleteBoard_checkUserId: " + userDetails.getUser().getId());
         return ResponseUtils.ok(null);
     }
