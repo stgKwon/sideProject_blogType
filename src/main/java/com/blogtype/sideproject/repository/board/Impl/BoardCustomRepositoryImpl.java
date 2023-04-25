@@ -17,6 +17,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     private final EntityManager entityManager;
 
+    /* FIXME :: Optional 처리 필요 */
     @Override
     public List<Board> findAllBoardList() {
         return entityManager.createQuery("SELECT b FROM Board AS b", Board.class).getResultList();

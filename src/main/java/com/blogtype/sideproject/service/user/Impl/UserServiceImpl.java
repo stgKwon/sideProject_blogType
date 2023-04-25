@@ -1,10 +1,12 @@
 package com.blogtype.sideproject.service.user.Impl;
 
-import com.blogtype.sideproject.dto.board.BoardDTO;
-import com.blogtype.sideproject.dto.user.UserDTO;
+import com.blogtype.sideproject.dto.user.UserRequestDto;
+import com.blogtype.sideproject.dto.user.UserResponseDto;
 import com.blogtype.sideproject.model.user.User;
 import com.blogtype.sideproject.repository.user.UserRepository;
 import com.blogtype.sideproject.service.user.UserService;
+import com.blogtype.sideproject.util.aws.S3Uploader;
+import com.blogtype.sideproject.util.constants.StringConstant;
 import com.blogtype.sideproject.util.security.jwt.JwtTokenProvider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -33,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
+    private final S3Uploader s3Uploader;
 
     @Value("${client_id}")
     private String client_id;
@@ -44,17 +48,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDTO.ResponseDto kakaoLogin(String code) throws Exception {
-        UserDTO.ResponseDto result = new UserDTO.ResponseDto();
+    public UserResponseDto.TokenInfo kakaoLogin(String code) throws Exception {
+        UserResponseDto.TokenInfo result = new UserResponseDto.TokenInfo();
         try {
             /*
                 FIXME :: SNS 로그인 토큰 처리 방식에 대하여 다시 생각이 필요하다.
              */
-
             // '인가 코드' 로 '엑세스 토큰' 요청.
             String accessToken = getAccessToken(code);
             // 유저정보 호출
-            UserDTO.KakaoUserInfo userInfo = getKakaoUserInfo(accessToken);
+            UserResponseDto.KakaoUserInfo userInfo = getKakaoUserInfo(accessToken);
             // DB 에 중복된 KakaoId 가 있는지 확인
             Optional<User> findUserByKakaoId = userRepository.findAllByKakaoId(userInfo.getKakaoId());
             // 중복 id 값 존재 확인
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 User user = User.createUser(userInfo);
                 userRepository.save(user);
             }
-
+            // FIXME :: 저장된 User 정보를 다시 찾아오는 것이 맞을까? -> 다른 방안 생각해보기.
             Optional<User> findUserOptional = userRepository.findAllByKakaoId(userInfo.getKakaoId());
             findUserOptional.ifPresent(user -> result.setAccessToken(jwtTokenProvider.createToken(user).getAccessToken()));
 
@@ -73,13 +76,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO.ResponseUserInfo findUserInfo(Long userId) throws Exception {
+    public UserResponseDto.UserInfo findUserInfo(Long userId) throws Exception {
 
-        UserDTO.ResponseUserInfo result = new UserDTO.ResponseUserInfo();
+        UserResponseDto.UserInfo result = new UserResponseDto.UserInfo();
         try{
             Optional<User> findUserById = userRepository.findUser(userId);
             if (findUserById.isPresent()){
-                result = modelMapper.map(findUserById, UserDTO.ResponseUserInfo.class);
+                // FIXME , 매핑 필드값 불일치 시 사이드 이펙트 확인 ,
+                result = modelMapper.map(findUserById, UserResponseDto.UserInfo.class);
             }
 
         }catch (Exception e){
@@ -88,8 +92,19 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public void modifyUserInfo(Long userId , UserRequestDto.ModifyUser requestDto, MultipartFile imgFile) throws Exception {
+        try{
+            Optional<User> findUserById = userRepository.findUser(userId);
+            //FIXME :: 수정 시 , 기존 원본 이미지 삭제 처리 필요
+            String uploadImgUrl = s3Uploader.upload(imgFile, StringConstant.USER);
+            requestDto.setUpdateImgUrl(uploadImgUrl);
+            findUserById.ifPresent(user -> user.updateUser(requestDto));
 
-
+        }catch (Exception e){
+            log.error("[UserService] modifyUserInfo :: " , e);
+        }
+    }
 
     // 카카오 접근 토큰 발급 요청
     private String getAccessToken(String code) throws Exception {
@@ -129,9 +144,9 @@ public class UserServiceImpl implements UserService {
     }
 
     // 유저 정보
-    private UserDTO.KakaoUserInfo getKakaoUserInfo(String accessToken) throws Exception {
+    private UserResponseDto.KakaoUserInfo getKakaoUserInfo(String accessToken) throws Exception {
 
-        UserDTO.KakaoUserInfo userInfo = new UserDTO.KakaoUserInfo();
+        UserResponseDto.KakaoUserInfo userInfo = new UserResponseDto.KakaoUserInfo();
 
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -151,15 +166,25 @@ public class UserServiceImpl implements UserService {
 
             String responseBody = response.getBody();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
+            JsonNode properties = jsonNode.get("properties");
+            JsonNode kakao_account = jsonNode.get("kakao_account");
+            log.debug("### checkKakaoUserInfo ::: {} , {} , {} ", jsonNode,properties,kakao_account);
 
             Long id = jsonNode.get("id").asLong();
             String userName = "";
-            if (jsonNode.get("properties") != null && !jsonNode.get("properties").isEmpty()){
-                userName = jsonNode.get("properties").get("nickname").toString();
-            }
-            String email = jsonNode.get("kakao_account").get("email").asText();
+            String profileImg = "";
+            String email = "";
 
-            userInfo.setUserInfo(id,userName,email);
+            if (properties != null && properties.isObject()){
+                userName = properties.get("nickName").isNull() ? "defaultName" : properties.get("nickname").asText();
+                profileImg = properties.get("profile_image").isNull() ? "defaultImgUrl" : properties.get("profile_image").asText();
+            }
+
+            if (kakao_account != null && kakao_account.isObject()){
+                email = kakao_account.get("email").isNull() ? "defaultEmail" : kakao_account.get("email").asText();
+            }
+
+            userInfo.setUserInfo(id,userName,profileImg,email);
         }catch (Exception e){
             log.error("[getKakaoUserInfo] :: ", e);
         }

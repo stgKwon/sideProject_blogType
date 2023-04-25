@@ -1,8 +1,10 @@
 package com.blogtype.sideproject.service.board.Impl;
 
-import com.blogtype.sideproject.dto.board.BoardDTO;
+import com.blogtype.sideproject.dto.board.BoardDto;
 import com.blogtype.sideproject.model.board.Board;
+import com.blogtype.sideproject.model.category.Category;
 import com.blogtype.sideproject.repository.board.BoardRepository;
+import com.blogtype.sideproject.repository.category.CategoryRepository;
 import com.blogtype.sideproject.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,17 +25,18 @@ public class BoardServiceImpl implements BoardService {
 
 
     private final BoardRepository boardRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardDTO.ResponseDto> findAllBoardList() throws Exception {
-        List<BoardDTO.ResponseDto> resultList = new ArrayList<>();
+    public List<BoardDto.ResponseDto> findAllBoardList() throws Exception {
+        List<BoardDto.ResponseDto> resultList = new ArrayList<>();
         try {
             // FIXME :: NULL 체크 필요 !
             List<Board> findAllBoardList = boardRepository.findAllBoardList();
             resultList = findAllBoardList.stream()
-                            .map(entity -> modelMapper.map(entity, BoardDTO.ResponseDto.class))
+                            .map(entity -> modelMapper.map(entity, BoardDto.ResponseDto.class))
                             .collect(Collectors.toList());
 
         }catch (Exception e) {
@@ -44,12 +47,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public BoardDTO.ResponseDto findBoard(Long userId, Long boardId) throws Exception {
-       BoardDTO.ResponseDto result = new BoardDTO.ResponseDto();
+    public BoardDto.ResponseDto findBoard(Long userId, Long boardId) throws Exception {
+       BoardDto.ResponseDto result = new BoardDto.ResponseDto();
         try {
-            // FIXME :: NULL 체크 필요 !
+            // FIXME :: NULL 체크 필요 ! , categoryId 필요성에 대한 테스트 필요
             Board board = boardRepository.findBoard(userId,boardId);
-            result = modelMapper.map(board, BoardDTO.ResponseDto.class);
+            result = modelMapper.map(board, BoardDto.ResponseDto.class);
 
         }catch (Exception e){
             log.error("[BoardService] findBoard :: " , e);
@@ -58,31 +61,27 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int createBoard(Long userId, BoardDTO.RequestDto requestDto) throws Exception {
-        int result = 0;
+    public void createBoard(Long userId, BoardDto.RequestDto requestDto) throws Exception {
         try {
-            /*
-                FIXME :: NULL 체크 수정
-             */
+
             Board board = Board.createBoard(userId, requestDto);
-            Optional<Long> saveBoardIdOptional = Optional.ofNullable(boardRepository.save(board).getId());
-            if (saveBoardIdOptional.isPresent()){
-                result = saveBoardIdOptional.get().intValue();
-            }
+            boardRepository.save(board);
+
+            Optional<Category> findCategoryById = categoryRepository.findCategory(userId,requestDto.getCategoryId());
+            findCategoryById.ifPresent(category -> category.updateBoardList(board));
 
         }catch (Exception e){
             log.error("[BoardService] createBoard :: " , e);
         }
-        return result;
     }
 
     @Override
-    public int modifyBoard() throws Exception {
-        return 0;
+    public void modifyBoard() throws Exception {
+
     }
 
     @Override
-    public int deleteBoard() throws Exception {
-        return 0;
+    public void deleteBoard() throws Exception {
+
     }
 }

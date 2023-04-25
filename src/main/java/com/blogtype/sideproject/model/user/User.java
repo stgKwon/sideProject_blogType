@@ -1,7 +1,8 @@
 package com.blogtype.sideproject.model.user;
 
 
-import com.blogtype.sideproject.dto.user.UserDTO;
+import com.blogtype.sideproject.dto.user.UserRequestDto;
+import com.blogtype.sideproject.dto.user.UserResponseDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,16 +25,32 @@ public class User {
     private String userName;
 
     @Column
+    private String nickName;
+
+    @Column
     private String email;
 
     @Column
     private String profileImgUrl;
 
-    public static User createUser(UserDTO.KakaoUserInfo userInfo){
+    @Column
+    private String intro;
+
+    /*
+        FIXME :: BUILDER ? , THIS ?
+     */
+    public static User createUser(UserResponseDto.KakaoUserInfo userInfo){
         return User.builder()
                 .kakaoId(userInfo.getKakaoId())
-                .userName(userInfo.getUserName())
+                .nickName(userInfo.getUserName())
+                .profileImgUrl(userInfo.getProfileImg())
                 .email(userInfo.getEmail())
                 .build();
+    }
+
+    public void updateUser(UserRequestDto.ModifyUser userInfo){
+        this.nickName = userInfo.getNickName();
+        this.intro = userInfo.getIntro();
+        this.profileImgUrl = userInfo.getUpdateImgUrl();
     }
 }

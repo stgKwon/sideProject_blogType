@@ -1,5 +1,6 @@
 package com.blogtype.sideproject.dto.board;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,10 @@ import java.io.Serializable;
 /**
  *  BLOG 게시글 관리
  */
-public class BoardDTO {
+@ApiModel(description = "게시글 관련 요청/ 응답 관리 Dto")
+public class BoardDto {
+
+    //FIXME :: 요청, 응답부 분리 예정
 
     @Getter
     @AllArgsConstructor
@@ -19,10 +23,13 @@ public class BoardDTO {
     @Builder
     public static class RequestDto {
 
-        @ApiModelProperty(position = 1 , example ="제목",required = true)
+        @ApiModelProperty(position = 1 , example ="카테고리 idx",required = true)
+        private Long categoryId;
+
+        @ApiModelProperty(position = 2 , example ="제목",required = true)
         private String boardTitle;
 
-        @ApiModelProperty(position = 2 , example ="내용",required = true)
+        @ApiModelProperty(position = 3 , example ="내용",required = true)
         private String contents;
     }
 
@@ -35,11 +42,14 @@ public class BoardDTO {
         @ApiModelProperty(position = 1 , example ="idx",required = true)
         private Long boardId;
 
+        @ApiModelProperty(position = 1 , example ="idx",required = true)
+        private Long categoryId;
+
         @ApiModelProperty(position = 2, example ="제목",required = true)
-        private Long boardTitle;
+        private String boardTitle;
 
         @ApiModelProperty(position = 3 , example = "내용",required = true)
-        private Long contents;
+        private String contents;
     }
 
 

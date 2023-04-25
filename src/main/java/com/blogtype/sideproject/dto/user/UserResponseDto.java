@@ -1,37 +1,29 @@
 package com.blogtype.sideproject.dto.user;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-/**
- *  USER 관리
- */
-public class UserDTO {
+@ApiModel(description = "유저 관련 응답 관리 Dto")
+public class UserResponseDto {
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class RequestDto {
-
-        @ApiModelProperty(position = 1 , example ="idx",required = true)
-        private Long id;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class ResponseDto implements Serializable {
+    public static class TokenInfo implements Serializable {
 
 
         @ApiModelProperty(position = 1 , example ="idx",required = true)
         private String accessToken;
 
         public void setAccessToken(String accessToken){
-            ResponseDto.builder().accessToken(accessToken).build();
+            UserResponseDto.TokenInfo.builder().accessToken(accessToken).build();
         }
 
     }
@@ -40,7 +32,7 @@ public class UserDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ResponseUserInfo implements Serializable {
+    public static class UserInfo implements Serializable {
 
         @ApiModelProperty(position = 1 , example ="idx",required = true)
         private Long userId;
@@ -52,13 +44,12 @@ public class UserDTO {
         private String profileImgUrl;
 
         public void setUserInfo(Long userId, String userName, String profileImgUrl){
-            ResponseUserInfo.builder()
+            UserResponseDto.UserInfo.builder()
                     .userId(userId)
                     .userName(userName)
                     .profileImgUrl(profileImgUrl)
                     .build();
         }
-
     }
 
     @Getter
@@ -72,14 +63,20 @@ public class UserDTO {
         @ApiModelProperty(position = 2 , example ="user1",required = true)
         private String userName;
         @ApiModelProperty(position = 3 , example ="email@email.com",required = true)
+        private String profileImg;
+        @ApiModelProperty(position = 4 , example ="email@email.com",required = true)
         private String email;
 
-        public void setUserInfo(Long kakaoId , String userName , String email){
-            KakaoUserInfo.builder()
+        public void setUserInfo(Long kakaoId, String userName, String profileImg, String email){
+            UserResponseDto.KakaoUserInfo.builder()
                     .kakaoId(kakaoId)
                     .userName(userName)
+                    .profileImg(profileImg)
                     .email(email)
                     .build();
         }
     }
+
+
+
 }
