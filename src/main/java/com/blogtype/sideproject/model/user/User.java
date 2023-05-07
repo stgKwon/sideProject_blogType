@@ -3,6 +3,7 @@ package com.blogtype.sideproject.model.user;
 
 import com.blogtype.sideproject.dto.user.UserRequestDto;
 import com.blogtype.sideproject.dto.user.UserResponseDto;
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,9 +20,11 @@ public class User {
     private Long Id;
 
     @Column
+    @NotNull
     private Long kakaoId;
 
     @Column
+    @NotNull
     private String userName;
 
     @Column
@@ -42,7 +45,7 @@ public class User {
     public static User createUser(UserResponseDto.KakaoUserInfo userInfo){
         return User.builder()
                 .kakaoId(userInfo.getKakaoId())
-                .nickName(userInfo.getUserName())
+                .userName(userInfo.getUserName())
                 .profileImgUrl(userInfo.getProfileImg())
                 .email(userInfo.getEmail())
                 .build();

@@ -2,6 +2,7 @@ package com.blogtype.sideproject.model.category;
 
 import com.blogtype.sideproject.dto.Category.CategoryDto;
 import com.blogtype.sideproject.model.board.Board;
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.boot.context.properties.bind.Name;
 
@@ -21,12 +22,14 @@ public class Category {
     private Long Id;
 
     @Column
+    @NotNull
     private Long userId;
 
     @Column
+    @NotNull
     private String categoryName;
 
-    @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Board> boardList = new ArrayList<>();
 
     public static Category createCategory(Long userId , CategoryDto.RequestDto requestDto){

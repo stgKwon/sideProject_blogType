@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +23,22 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     private final CategoryRepository categoryRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryDto.ResponseDto> findAllCategoryList() throws Exception {
-        return null;
+    public List<CategoryDto.ResponseDto> findAllCategoryList(Long userId) throws Exception {
+        List<CategoryDto.ResponseDto> resultList = new ArrayList<>();
+        try {
+            Optional<List<Category>> optionalCategoryList = categoryRepository.findAllCategoryList(userId);
+            if (optionalCategoryList.isPresent()) {
+                List<Category> findAllCategoryList = optionalCategoryList.get();
+                resultList = new CategoryDto.ResponseDto().categoryConvertToDtoList(findAllCategoryList,userId);
+            }
+
+        }catch (Exception e){
+            log.error("[CategoryService] findAllCategoryList :: " , e);
+        }
+        return resultList;
     }
 
     @Override
@@ -35,10 +46,11 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto.ResponseDto findCategory(Long userId, Long categoryId) throws Exception {
         CategoryDto.ResponseDto result = new CategoryDto.ResponseDto();
         try{
-            Optional<Category> category = categoryRepository.findCategory(categoryId,userId);
-            /* FIXME :: 매핑 테스트 필요 */
-            result = modelMapper.map(category, CategoryDto.ResponseDto.class);
-
+            Optional<Category> optionalCategory = categoryRepository.findCategory(categoryId,userId);
+            if (optionalCategory.isPresent()) {
+                Category category = optionalCategory.get();
+                result = new CategoryDto.ResponseDto().categoryConvertToDto(category, userId);
+            }
         }catch (Exception e){
             log.error("[CategoryService] findCategory :: " , e);
         }
@@ -47,9 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(Long userId, CategoryDto.RequestDto requestDto) throws Exception {
-        /*
-            FIXME :: 해당 방식으로 처리했을 때의 문제를 생각해보자.
-         */
+
         try{
             Category category = Category.createCategory(userId,requestDto);
             categoryRepository.save(category);

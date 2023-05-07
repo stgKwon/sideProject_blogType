@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -19,12 +20,14 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     /* FIXME :: Optional 처리 필요 */
     @Override
-    public List<Board> findAllBoardList() {
-        return entityManager.createQuery("SELECT b FROM Board AS b", Board.class).getResultList();
+    public Optional<List<Board>> findAllBoardList() {
+        return Optional.ofNullable(entityManager.createQuery("SELECT b FROM Board AS b", Board.class).getResultList());
     }
 
     @Override
-    public Board findBoard(Long userId, Long boardId) {
-        return entityManager.createQuery("SELECT b FROM Board AS b WHERE b.Id =:boardId AND b.userId =:userId",Board.class).getSingleResult();
+    public Optional<Board> findBoard(Long userId, Long boardId) {
+        return Optional.ofNullable(entityManager.createQuery("SELECT b FROM Board AS b WHERE b.Id =:boardId AND b.userId =:userId", Board.class)
+                .setParameter("userId", userId)
+                .getSingleResult());
     }
 }

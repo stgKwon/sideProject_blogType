@@ -33,7 +33,7 @@ public class BoardController {
 
     @GetMapping("/list")
     @ApiOperation(value = "블로그 전체 목록 조회" , notes = "전체 블로그 내용을 조회한다.")
-    public ResponseEntity<ResponseDto> findAllBoardList() throws Exception {
+    public ResponseEntity<ResponseDto> findAllBoardList(@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         List<BoardDto.ResponseDto> resultList = boardService.findAllBoardList();
         return ResponseUtils.ok(resultList);
     }
@@ -47,9 +47,8 @@ public class BoardController {
 
     @PostMapping("/create")
     @ApiOperation(value = "블로그 게시글 생성" , notes = "블로그 게시글을 생성한다.")
-    public ResponseEntity<ResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, BoardDto.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,  @RequestBody BoardDto.RequestDto requestDto) throws Exception {
         log.info("[BoardController] createBoard_checkUserId: " + userDetails.getUser().getId());
-        log.info("[BoardController] createBoard_requestDto: " + writer.writeValueAsString(requestDto));
         boardService.createBoard(ConvertUtil.findUserId(userDetails),requestDto);
         return ResponseUtils.ok(null);
     }

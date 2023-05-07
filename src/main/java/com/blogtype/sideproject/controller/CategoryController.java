@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Api(tags = {"CATEGORY API"})
 @RestController
@@ -30,11 +32,11 @@ public class CategoryController {
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
 
-    @GetMapping("/list")
+    @GetMapping("/list/{userId}")
     @ApiOperation(value = "카테고리 전체 목록 조회" , notes = "전체 카테고리 내용을 조회한다.")
-    public ResponseEntity<ResponseDto> findAllCategoryList() throws Exception {
-
-        return ResponseUtils.ok(null);
+    public ResponseEntity<ResponseDto> findAllCategoryList(@PathVariable(name = "userId") Long userId) throws Exception {
+        List<CategoryDto.ResponseDto> resultList = categoryService.findAllCategoryList(userId);
+        return ResponseUtils.ok(resultList);
     }
 
     @GetMapping("/detail/{categoryId}")
@@ -46,9 +48,9 @@ public class CategoryController {
 
     @PostMapping("/create")
     @ApiOperation(value = "카테고리 생성" , notes = "카테고리 목록을 생성한다.")
-    public ResponseEntity<ResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, CategoryDto.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CategoryDto.RequestDto requestDto) throws Exception {
         log.info("[CategoryController] createCategory_checkUserId: " + userDetails.getUser().getId());
-        log.info("[CategoryController] createCategory_requestDto: " + writer.writeValueAsString(requestDto));
+        log.info("[CategoryController] createCategory_checkDto: " + writer.writeValueAsString(requestDto));
         categoryService.createCategory(ConvertUtil.findUserId(userDetails), requestDto);
         return ResponseUtils.ok(null);
     }

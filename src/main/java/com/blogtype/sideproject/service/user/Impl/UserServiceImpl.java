@@ -59,15 +59,18 @@ public class UserServiceImpl implements UserService {
             // 유저정보 호출
             UserResponseDto.KakaoUserInfo userInfo = getKakaoUserInfo(accessToken);
             // DB 에 중복된 KakaoId 가 있는지 확인
-            Optional<User> findUserByKakaoId = userRepository.findAllByKakaoId(userInfo.getKakaoId());
+            Optional<User> findUserByKakaoId = userRepository.findUserByKakaoId(userInfo.getKakaoId());
             // 중복 id 값 존재 확인
             if (!findUserByKakaoId.isPresent()) {
                 User user = User.createUser(userInfo);
                 userRepository.save(user);
             }
             // FIXME :: 저장된 User 정보를 다시 찾아오는 것이 맞을까? -> 다른 방안 생각해보기.
-            Optional<User> findUserOptional = userRepository.findAllByKakaoId(userInfo.getKakaoId());
-            findUserOptional.ifPresent(user -> result.setAccessToken(jwtTokenProvider.createToken(user).getAccessToken()));
+            Optional<User> findUserOptional = userRepository.findUserByKakaoId(userInfo.getKakaoId());
+            if (findUserOptional.isPresent()){
+                User user = findUserOptional.get();
+                result = result.setAccessToken(user.getId(), jwtTokenProvider.createToken(user).getAccessToken());
+            }
 
         }catch(Exception e){
             log.error("[UserService] kakaoLogin :: " , e);
@@ -77,13 +80,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto.UserInfo findUserInfo(Long userId) throws Exception {
-
         UserResponseDto.UserInfo result = new UserResponseDto.UserInfo();
         try{
-            Optional<User> findUserById = userRepository.findUser(userId);
-            if (findUserById.isPresent()){
-                // FIXME , 매핑 필드값 불일치 시 사이드 이펙트 확인 ,
-                result = modelMapper.map(findUserById, UserResponseDto.UserInfo.class);
+            Optional<User> optionalUser = userRepository.findUser(userId);
+            if (optionalUser.isPresent()){
+                User user = optionalUser.get();
+                result = new UserResponseDto.UserInfo().userConvertToDto(user);
             }
 
         }catch (Exception e){
@@ -95,12 +97,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyUserInfo(Long userId , UserRequestDto.ModifyUser requestDto, MultipartFile imgFile) throws Exception {
         try{
-            Optional<User> findUserById = userRepository.findUser(userId);
+            Optional<User> optionalUser = userRepository.findUser(userId);
             //FIXME :: 수정 시 , 기존 원본 이미지 삭제 처리 필요
             String uploadImgUrl = s3Uploader.upload(imgFile, StringConstant.USER);
             requestDto.setUpdateImgUrl(uploadImgUrl);
-            findUserById.ifPresent(user -> user.updateUser(requestDto));
-
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.updateUser(requestDto);
+            }
         }catch (Exception e){
             log.error("[UserService] modifyUserInfo :: " , e);
         }
@@ -132,6 +136,7 @@ public class UserServiceImpl implements UserService {
                     String.class
             );
             // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+            log.info("### checkResponse :: {}",response.getBody());
             String responseBody = response.getBody();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             accessToken = jsonNode.get("access_token").asText();
@@ -145,9 +150,7 @@ public class UserServiceImpl implements UserService {
 
     // 유저 정보
     private UserResponseDto.KakaoUserInfo getKakaoUserInfo(String accessToken) throws Exception {
-
         UserResponseDto.KakaoUserInfo userInfo = new UserResponseDto.KakaoUserInfo();
-
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -166,25 +169,15 @@ public class UserServiceImpl implements UserService {
 
             String responseBody = response.getBody();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-            JsonNode properties = jsonNode.get("properties");
+            JsonNode properties = jsonNode.get("properties"); //FIXME :: NPE 체크
             JsonNode kakao_account = jsonNode.get("kakao_account");
-            log.debug("### checkKakaoUserInfo ::: {} , {} , {} ", jsonNode,properties,kakao_account);
 
             Long id = jsonNode.get("id").asLong();
-            String userName = "";
-            String profileImg = "";
-            String email = "";
+            String userName = properties.get("nickname").isNull() ? "defaultName" : properties.get("nickname").asText();
+            String profileImg = properties.get("profile_image").isNull() ? "defaultImgUrl" : properties.get("profile_image").asText();
+            String email = kakao_account.get("email").isNull() ? "defaultEmail" : kakao_account.get("email").asText();
+            userInfo = userInfo.setUserInfo(id,userName,profileImg,email);
 
-            if (properties != null && properties.isObject()){
-                userName = properties.get("nickName").isNull() ? "defaultName" : properties.get("nickname").asText();
-                profileImg = properties.get("profile_image").isNull() ? "defaultImgUrl" : properties.get("profile_image").asText();
-            }
-
-            if (kakao_account != null && kakao_account.isObject()){
-                email = kakao_account.get("email").isNull() ? "defaultEmail" : kakao_account.get("email").asText();
-            }
-
-            userInfo.setUserInfo(id,userName,profileImg,email);
         }catch (Exception e){
             log.error("[getKakaoUserInfo] :: ", e);
         }

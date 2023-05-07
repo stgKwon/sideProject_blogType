@@ -1,7 +1,6 @@
 package com.blogtype.sideproject.service.category;
 
 import com.blogtype.sideproject.dto.Category.CategoryDto;
-import com.blogtype.sideproject.dto.board.BoardDto;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ public interface CategoryService {
     /**
      * DESC :: 카테고리 전체 목록 조회
      */
-    List<CategoryDto.ResponseDto> findAllCategoryList() throws Exception;
+    List<CategoryDto.ResponseDto> findAllCategoryList(Long userId) throws Exception;
 
     /**
      * DESC :: 카테고리 전체 목록 조회

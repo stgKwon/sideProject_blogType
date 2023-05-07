@@ -20,6 +20,15 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
 
     @Override
     public Optional<User> findUser(Long userId) {
-        return Optional.ofNullable(entityManager.createQuery("SELECT u FROM User AS u WHERE u.Id =:userId", User.class).getSingleResult());
+        return Optional.ofNullable(entityManager.createQuery("SELECT u FROM User AS u WHERE u.Id =:userId", User.class)
+                .setParameter("userId",userId)
+                .getSingleResult());
+    }
+
+    @Override
+    public Optional<User> findUserByKakaoId(Long kakaoId) {
+        return Optional.ofNullable(entityManager.createQuery("SELECT u FROM User AS u WHERE u.kakaoId =:kakaoId", User.class)
+                .setParameter("kakaoId",kakaoId)
+                .getSingleResult());
     }
 }

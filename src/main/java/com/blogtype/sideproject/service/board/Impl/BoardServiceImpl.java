@@ -8,13 +8,12 @@ import com.blogtype.sideproject.repository.category.CategoryRepository;
 import com.blogtype.sideproject.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 @Slf4j
@@ -26,7 +25,6 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -34,10 +32,14 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto.ResponseDto> resultList = new ArrayList<>();
         try {
             // FIXME :: NULL 체크 필요 !
-            List<Board> findAllBoardList = boardRepository.findAllBoardList();
-            resultList = findAllBoardList.stream()
-                            .map(entity -> modelMapper.map(entity, BoardDto.ResponseDto.class))
-                            .collect(Collectors.toList());
+            Optional<List<Board>> optionalBoardList = boardRepository.findAllBoardList();
+            if (optionalBoardList.isPresent()){
+                List<Board> findAllBoardList = optionalBoardList.get();
+                resultList = new BoardDto.ResponseDto().boardConvertToDtoList(findAllBoardList);
+
+
+            }
+
 
         }catch (Exception e) {
             log.error("[BoardService] findAllBoardList :: " , e);
@@ -50,10 +52,11 @@ public class BoardServiceImpl implements BoardService {
     public BoardDto.ResponseDto findBoard(Long userId, Long boardId) throws Exception {
        BoardDto.ResponseDto result = new BoardDto.ResponseDto();
         try {
-            // FIXME :: NULL 체크 필요 ! , categoryId 필요성에 대한 테스트 필요
-            Board board = boardRepository.findBoard(userId,boardId);
-            result = modelMapper.map(board, BoardDto.ResponseDto.class);
-
+            Optional<Board> optionalBoard = boardRepository.findBoard(userId,boardId);
+            if (optionalBoard.isPresent()) {
+                Board findBoard = optionalBoard.get();
+                result = new BoardDto.ResponseDto().boardConvertToDto(findBoard);
+            }
         }catch (Exception e){
             log.error("[BoardService] findBoard :: " , e);
         }
@@ -66,9 +69,12 @@ public class BoardServiceImpl implements BoardService {
 
             Board board = Board.createBoard(userId, requestDto);
             boardRepository.save(board);
-
-            Optional<Category> findCategoryById = categoryRepository.findCategory(userId,requestDto.getCategoryId());
-            findCategoryById.ifPresent(category -> category.updateBoardList(board));
+            // FIXME :: 좀 더 생각해봐야할 듯 싶다...
+            Optional<Category> optionalCategory = categoryRepository.findCategory(userId,requestDto.getCategoryId());
+            if (optionalCategory.isPresent()){
+                Category findCategory = optionalCategory.get();
+                findCategory.updateBoardList(board);
+            }
 
         }catch (Exception e){
             log.error("[BoardService] createBoard :: " , e);
