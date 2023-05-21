@@ -27,7 +27,17 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     @Override
     public Optional<Board> findBoard(Long userId, Long boardId) {
         return Optional.ofNullable(entityManager.createQuery("SELECT b FROM Board AS b WHERE b.Id =:boardId AND b.userId =:userId", Board.class)
+                .setParameter("boardId", boardId)
                 .setParameter("userId", userId)
                 .getSingleResult());
+    }
+
+    @Override
+    public Optional<List<Board>> findLatestBoardList(Long userId) {
+        return Optional.ofNullable(entityManager
+                .createQuery("SELECT b FROM Board AS b WHERE b.userId =:userId ORDER BY b.Id DESC ",Board.class)
+                .setParameter("userId",userId)
+                .setMaxResults(4)
+                .getResultList());
     }
 }

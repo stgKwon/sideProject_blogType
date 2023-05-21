@@ -1,8 +1,8 @@
 package com.blogtype.sideproject.controller;
 
 
-import com.blogtype.sideproject.dto.Category.CategoryDto;
-import com.blogtype.sideproject.dto.board.BoardDto;
+import com.blogtype.sideproject.dto.category.CategoryRequestDto;
+import com.blogtype.sideproject.dto.category.CategoryResponseDto;
 import com.blogtype.sideproject.dto.common.ResponseDto;
 import com.blogtype.sideproject.service.category.CategoryService;
 import com.blogtype.sideproject.util.convert.ConvertUtil;
@@ -35,20 +35,20 @@ public class CategoryController {
     @GetMapping("/list/{userId}")
     @ApiOperation(value = "카테고리 전체 목록 조회" , notes = "전체 카테고리 내용을 조회한다.")
     public ResponseEntity<ResponseDto> findAllCategoryList(@PathVariable(name = "userId") Long userId) throws Exception {
-        List<CategoryDto.ResponseDto> resultList = categoryService.findAllCategoryList(userId);
+        List<CategoryResponseDto.ResponseDto> resultList = categoryService.findAllCategoryList(userId);
         return ResponseUtils.ok(resultList);
     }
 
     @GetMapping("/detail/{categoryId}")
     @ApiOperation(value = "카테고리 게시글 조회" , notes = "선택 카테고리 내용을 조회한다.")
     public ResponseEntity<ResponseDto> findCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "categoryId") Long categoryId) throws Exception {
-        CategoryDto.ResponseDto result = categoryService.findCategory(ConvertUtil.findUserId(userDetails), categoryId);
+        CategoryResponseDto.ResponseDto result = categoryService.findCategory(ConvertUtil.findUserId(userDetails), categoryId);
         return ResponseUtils.ok(result);
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "카테고리 생성" , notes = "카테고리 목록을 생성한다.")
-    public ResponseEntity<ResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CategoryDto.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CategoryRequestDto.RequestDto requestDto) throws Exception {
         log.info("[CategoryController] createCategory_checkUserId: " + userDetails.getUser().getId());
         log.info("[CategoryController] createCategory_checkDto: " + writer.writeValueAsString(requestDto));
         categoryService.createCategory(ConvertUtil.findUserId(userDetails), requestDto);
@@ -56,16 +56,18 @@ public class CategoryController {
     }
 
     @PatchMapping("/modify/{categoryId}")
-    @ApiOperation(value = "카테고리 게시글 수정" , notes = "선택 카테고리 내용을 수정한다.")
-    public ResponseEntity<ResponseDto> modifyCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "categoryId") Long categoryId) throws Exception {
+    @ApiOperation(value = "카테고리 게시글 수정 " , notes = "선택 카테고리 내용을 수정한다.")
+    public ResponseEntity<ResponseDto> modifyCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "categoryId") Long categoryId, CategoryRequestDto.ModifyCategoryDto requestDto) throws Exception {
         log.info("[CategoryController] modifyBoard_checkUserId: " + userDetails.getUser().getId());
+        categoryService.modifyCategory(ConvertUtil.findUserId(userDetails),categoryId, requestDto);
         return ResponseUtils.ok(null);
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    @ApiOperation(value = "카테고리 게시글 삭제" , notes = "선택 카테고리 내용을 삭제한다." )
+    @ApiOperation(value = "카테고리 게시글 삭제 " , notes = "선택 카테고리 내용을 삭제한다." )
     public ResponseEntity<ResponseDto> deleteCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "categoryId") Long categoryId) throws Exception {
         log.info("[CategoryController] deleteCategory_checkUserId: " + userDetails.getUser().getId());
+        categoryService.deleteCategory(ConvertUtil.findUserId(userDetails),categoryId);
         return ResponseUtils.ok(null);
     }
 

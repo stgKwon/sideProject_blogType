@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
 
         }catch(Exception e){
             log.error("[UserService] kakaoLogin :: " , e);
+            throw new Exception();
         }
         return result;
     }
@@ -90,6 +91,7 @@ public class UserServiceImpl implements UserService {
 
         }catch (Exception e){
             log.error("[UserService] findUserInfo :: " , e);
+            throw new Exception();
         }
         return result;
     }
@@ -107,6 +109,7 @@ public class UserServiceImpl implements UserService {
             }
         }catch (Exception e){
             log.error("[UserService] modifyUserInfo :: " , e);
+            throw new Exception();
         }
     }
 
@@ -143,6 +146,7 @@ public class UserServiceImpl implements UserService {
 
         } catch (Exception e){
             log.error("[getAccessToken] :: " , e);
+            throw new Exception();
         }
 
         return accessToken;
@@ -180,6 +184,7 @@ public class UserServiceImpl implements UserService {
 
         }catch (Exception e){
             log.error("[getKakaoUserInfo] :: ", e);
+            throw new Exception();
         }
         return userInfo;
     }

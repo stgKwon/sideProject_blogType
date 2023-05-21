@@ -1,6 +1,6 @@
 package com.blogtype.sideproject.service.category.Impl;
 
-import com.blogtype.sideproject.dto.Category.CategoryDto;
+import com.blogtype.sideproject.dto.category.CategoryResponseDto;
 import com.blogtype.sideproject.model.category.Category;
 import com.blogtype.sideproject.repository.category.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -35,13 +32,13 @@ class CategoryServiceImplTest {
     @Transactional
     void findAllCategoryList() {
 
-        List<CategoryDto.ResponseDto> resultList = new ArrayList<>();
+        List<CategoryResponseDto.ResponseDto> resultList = new ArrayList<>();
         try {
             Long userId = 1L;
             Optional<List<Category>> optionalCategoryList = categoryRepository.findAllCategoryList(userId);
             if (optionalCategoryList.isPresent()) {
                 List<Category> findAllCategoryList = optionalCategoryList.get();
-                resultList = new CategoryDto.ResponseDto().categoryConvertToDtoList(findAllCategoryList,userId);
+                resultList = new CategoryResponseDto.ResponseDto().categoryConvertToDtoList(findAllCategoryList,userId);
             }
             resultList.forEach(f -> {
                 System.out.println("야야야야ㅑ야야야야야"+ f.getCategoryName());

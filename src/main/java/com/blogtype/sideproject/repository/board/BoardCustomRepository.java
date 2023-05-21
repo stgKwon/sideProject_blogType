@@ -16,5 +16,10 @@ public interface BoardCustomRepository {
         DESC :: 단일 게시글 조회
      */
     Optional<Board> findBoard(Long userId, Long boardId);
+
+    /*
+      DESC :: 블로그 게시글 최신순 조회
+    */
+    Optional<List<Board>> findLatestBoardList(Long userId);
 }
 

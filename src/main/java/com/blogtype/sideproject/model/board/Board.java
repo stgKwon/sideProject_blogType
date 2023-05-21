@@ -1,6 +1,7 @@
 package com.blogtype.sideproject.model.board;
 
-import com.blogtype.sideproject.dto.board.BoardDto;
+import com.blogtype.sideproject.dto.board.BoardRequestDto;
+import com.blogtype.sideproject.dto.board.BoardResponseDto;
 import com.blogtype.sideproject.model.category.Category;
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -44,11 +45,17 @@ public class Board {
         }
     }
 
-    public static Board createBoard(Long userId , BoardDto.RequestDto requestDto){
+    public static Board createBoard(Long userId , BoardRequestDto.RequestDto requestDto){
         return Board.builder()
                 .boardTitle(requestDto.getBoardTitle())
                 .contents(requestDto.getContents())
                 .userId(userId)
                 .build();
     }
+
+    public void updateBoard(BoardRequestDto.ModifyBoardDto requestDto){
+        this.boardTitle = requestDto.getBoardTitle();
+        this.contents = requestDto.getContents();
+    }
+
 }

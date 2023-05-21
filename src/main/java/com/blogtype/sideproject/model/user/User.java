@@ -39,9 +39,7 @@ public class User {
     @Column
     private String intro;
 
-    /*
-        FIXME :: BUILDER ? , THIS ?
-     */
+
     public static User createUser(UserResponseDto.KakaoUserInfo userInfo){
         return User.builder()
                 .kakaoId(userInfo.getKakaoId())
