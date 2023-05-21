@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyUserInfo(Long userId , UserRequestDto.ModifyUser requestDto, MultipartFile imgFile) throws Exception {
+    public void modifyUserInfo(Long userId , UserRequestDto.ModifyUserDto requestDto, MultipartFile imgFile) throws Exception {
         try{
             Optional<User> optionalUser = userRepository.findUser(userId);
             //FIXME :: 수정 시 , 기존 원본 이미지 삭제 처리 필요
@@ -111,6 +111,11 @@ public class UserServiceImpl implements UserService {
             log.error("[UserService] modifyUserInfo :: " , e);
             throw new Exception();
         }
+    }
+
+    @Override
+    public void findDateByWrite(Long userId) throws Exception {
+
     }
 
     // 카카오 접근 토큰 발급 요청

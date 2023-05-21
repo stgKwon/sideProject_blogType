@@ -41,14 +41,17 @@ public class UserResponseDto {
         @ApiModelProperty(position = 1 , example ="idx",required = true)
         private Long userId;
 
-        @ApiModelProperty(position = 2 , example ="userName",required = true)
+        @ApiModelProperty(position = 2 , example ="유저이름",required = true)
         private String userName;
 
-        @ApiModelProperty(position = 3 , example ="userName",required = true)
+        @ApiModelProperty(position = 3 , example ="닉네임",required = true)
         private String nickName;
 
-        @ApiModelProperty(position = 4 , example ="imageUrl",required = true)
+        @ApiModelProperty(position = 4 , example ="프로필 이미지 URL",required = true)
         private String profileImgUrl;
+
+        @ApiModelProperty(position = 5 , example ="자기소개",required = true)
+        private String intro;
 
         public UserResponseDto.UserInfo userConvertToDto(User user){
             return UserResponseDto.UserInfo.builder()
@@ -56,6 +59,7 @@ public class UserResponseDto {
                     .userName(user.getUserName())
                     .nickName(user.getNickName())
                     .profileImgUrl(user.getProfileImgUrl())
+                    .intro(user.getIntro())
                     .build();
         }
     }
@@ -68,9 +72,9 @@ public class UserResponseDto {
 
         @ApiModelProperty(position = 1 , example ="110110",required = true)
         private Long kakaoId;
-        @ApiModelProperty(position = 2 , example ="user1",required = true)
+        @ApiModelProperty(position = 2 , example ="유저이름",required = true)
         private String userName;
-        @ApiModelProperty(position = 3 , example ="email@email.com",required = true)
+        @ApiModelProperty(position = 3 , example ="프로필 이미지",required = true)
         private String profileImg;
         @ApiModelProperty(position = 4 , example ="email@email.com",required = true)
         private String email;
@@ -83,6 +87,19 @@ public class UserResponseDto {
                     .email(email)
                     .build();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class WriteDateResponseDto implements Serializable{
+
+        @ApiModelProperty(position = 1 , example ="20230518",required = false)
+        private String writeDate;
+
+        @ApiModelProperty(position = 2 , example ="20",required = false)
+        private String totalCnt;
     }
 
 

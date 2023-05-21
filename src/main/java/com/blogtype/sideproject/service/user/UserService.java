@@ -17,7 +17,12 @@ public interface UserService {
     UserResponseDto.UserInfo findUserInfo(Long userId) throws Exception;
 
     /**
-     * DESC :: 회원 정보 조회
+     * DESC :: 회원 정보 수정
      */
-    void modifyUserInfo(Long userId , UserRequestDto.ModifyUser requestDto, MultipartFile imgFile) throws Exception;
+    void modifyUserInfo(Long userId , UserRequestDto.ModifyUserDto requestDto, MultipartFile imgFile) throws Exception;
+
+    /**
+     * DESC :: 회원이 글을 작성한 일자와 카운트
+     */
+    void findDateByWrite(Long userId) throws Exception;
 }

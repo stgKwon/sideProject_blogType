@@ -17,7 +17,7 @@ public class UserRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ModifyUser {
+    public static class ModifyUserDto {
 
         @ApiModelProperty(position = 1 , example ="유저 닉네임",required = false)
         private String nickName;
@@ -34,6 +34,21 @@ public class UserRequestDto {
         public void setUpdateImgUrl(String updateImgUrl){
             this.updateImgUrl = updateImgUrl;
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class WriteDateRequestDto {
+
+        @ApiModelProperty(position = 1 , example ="20230518",required = false)
+        private String startDate;
+
+        @ApiModelProperty(position = 2 , example ="20230519",required = false)
+        private String endDate;
+
+
     }
 
 }

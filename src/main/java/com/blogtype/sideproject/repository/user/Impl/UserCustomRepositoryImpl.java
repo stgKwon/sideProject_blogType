@@ -31,4 +31,5 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .setParameter("kakaoId",kakaoId)
                 .getSingleResult());
     }
+
 }

@@ -21,4 +21,6 @@ public interface QnaCustomRepository {
         DESC :: Qna 최신순 조회
     */
     Optional<List<Qna>> findLatestQnaList(Long userId);
+
+
 }
