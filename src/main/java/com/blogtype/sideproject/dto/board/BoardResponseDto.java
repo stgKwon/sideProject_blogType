@@ -25,19 +25,19 @@ public class BoardResponseDto {
     @Builder
     public static class ResponseDto implements Serializable {
 
-        @ApiModelProperty(position = 1 , example ="1",required = true)
+        @ApiModelProperty(position = 1 , value ="게시글 idx",required = true)
         private Long boardId;
 
-        @ApiModelProperty(position = 2 , example ="1",required = true)
+        @ApiModelProperty(position = 2 , value ="카테고리 idx",required = true)
         private Long categoryId;
 
-        @ApiModelProperty(position = 3, example ="1",required = true)
+        @ApiModelProperty(position = 3, value ="유저 idx",required = true)
         private Long userId;
 
-        @ApiModelProperty(position = 4, example ="제목",required = true)
+        @ApiModelProperty(position = 4, value ="게시글 제목",required = true)
         private String boardTitle;
 
-        @ApiModelProperty(position = 5 , example = "내용",required = true)
+        @ApiModelProperty(position = 5 , value = "게시글 내용",required = true)
         private String contents;
 
         public BoardResponseDto.ResponseDto boardConvertToDto(Board board){

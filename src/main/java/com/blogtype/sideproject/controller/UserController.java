@@ -56,18 +56,17 @@ public class UserController {
     @PatchMapping("/info/modify")
     @ApiOperation(value = "회원 정보 수정" , notes = "회원 정보를 수정한다.")
     public ResponseEntity<ResponseDto> modifyUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                      @RequestBody UserRequestDto.ModifyUserDto requestDto,
+                                                      @RequestBody UserRequestDto.ModifyUserDto userModRequestDto,
                                                       @RequestPart MultipartFile imgFile) throws Exception {
-        log.info("[modifyUserInfo] checkParam: " + writer.writeValueAsString(requestDto));
-        userService.modifyUserInfo(ConvertUtil.findUserId(userDetails) , requestDto , imgFile);
+        log.info("[modifyUserInfo] checkParam: " + writer.writeValueAsString(userModRequestDto));
+        userService.modifyUserInfo(ConvertUtil.findUserId(userDetails) , userModRequestDto , imgFile);
         return ResponseUtils.ok(null);
     }
 
-    //회원정보 수정
     @GetMapping("/info/write-date")
-    @ApiOperation(value = "회원이 작성한 글에 대한 일자 및 작성 수" , notes = "회읜이 작성한 블로그 및 QnA 글의 일자 및 작성 수를 응답.")
-    public ResponseEntity<ResponseDto> findDateByWrite(@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
-        userService.findDateByWrite(ConvertUtil.findUserId(userDetails));
+    @ApiOperation(value = "회원이 작성한 글에 대한 일자 및 작성 수 (개발중)" , notes = "회읜이 작성한 블로그 및 QnA 글의 일자 및 작성 수를 응답.")
+    public ResponseEntity<ResponseDto> findWriteDateByUser(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UserRequestDto.WriteDateRequestDto writeDateRequestDto) throws Exception {
+        userService.findWriteDateByUser(ConvertUtil.findUserId(userDetails), writeDateRequestDto);
         return ResponseUtils.ok(null);
     }
 

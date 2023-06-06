@@ -48,18 +48,18 @@ public class CategoryController {
 
     @PostMapping("/create")
     @ApiOperation(value = "카테고리 생성" , notes = "카테고리 목록을 생성한다.")
-    public ResponseEntity<ResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CategoryRequestDto.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CategoryRequestDto.RequestDto categoryRequestDto) throws Exception {
         log.info("[CategoryController] createCategory_checkUserId: " + userDetails.getUser().getId());
-        log.info("[CategoryController] createCategory_checkDto: " + writer.writeValueAsString(requestDto));
-        categoryService.createCategory(ConvertUtil.findUserId(userDetails), requestDto);
+        log.info("[CategoryController] createCategory_checkDto: " + writer.writeValueAsString(categoryRequestDto));
+        categoryService.createCategory(ConvertUtil.findUserId(userDetails), categoryRequestDto);
         return ResponseUtils.ok(null);
     }
 
     @PatchMapping("/modify/{categoryId}")
     @ApiOperation(value = "카테고리 게시글 수정 " , notes = "선택 카테고리 내용을 수정한다.")
-    public ResponseEntity<ResponseDto> modifyCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "categoryId") Long categoryId, CategoryRequestDto.ModifyCategoryDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> modifyCategory(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "categoryId") Long categoryId, CategoryRequestDto.ModifyCategoryDto categoryModRequestDto) throws Exception {
         log.info("[CategoryController] modifyBoard_checkUserId: " + userDetails.getUser().getId());
-        categoryService.modifyCategory(ConvertUtil.findUserId(userDetails),categoryId, requestDto);
+        categoryService.modifyCategory(ConvertUtil.findUserId(userDetails),categoryId, categoryModRequestDto);
         return ResponseUtils.ok(null);
     }
 

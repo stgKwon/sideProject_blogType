@@ -19,16 +19,16 @@ public class UserRequestDto {
     @Builder
     public static class ModifyUserDto {
 
-        @ApiModelProperty(position = 1 , example ="유저 닉네임",required = false)
+        @ApiModelProperty(position = 1 , value ="유저 닉네임",required = false)
         private String nickName;
 
-        @ApiModelProperty(position = 2 , example ="자기소개",required = false)
+        @ApiModelProperty(position = 2 , value ="자기소개",required = false)
         private String intro;
 
-        @ApiModelProperty(position = 3 , example ="업데이트 이미지 URL",required = false)
+        @ApiModelProperty(position = 3 , value ="업데이트 이미지 URL",required = false)
         private String updateImgUrl;
 
-        @ApiModelProperty(position = 4 , example ="삭제 이미지 URL(변경 전 이미지 URL)",required = false)
+        @ApiModelProperty(position = 4 , value ="삭제 이미지 URL(변경 전 이미지 URL)",required = false)
         private String deleteImgUrl;
 
         public void setUpdateImgUrl(String updateImgUrl){
@@ -42,10 +42,10 @@ public class UserRequestDto {
     @Builder
     public static class WriteDateRequestDto {
 
-        @ApiModelProperty(position = 1 , example ="20230518",required = false)
+        @ApiModelProperty(position = 1 , value ="20230518",required = false)
         private String startDate;
 
-        @ApiModelProperty(position = 2 , example ="20230519",required = false)
+        @ApiModelProperty(position = 2 , value ="20230519",required = false)
         private String endDate;
 
 

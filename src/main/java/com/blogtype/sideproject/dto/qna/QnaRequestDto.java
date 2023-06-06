@@ -16,10 +16,10 @@ public class QnaRequestDto {
     @Builder
     public static class RequestDto {
 
-        @ApiModelProperty(position = 1 , example ="제목",required = true)
+        @ApiModelProperty(position = 1 , value ="qna 제목",required = true)
         private String qnaTitle;
 
-        @ApiModelProperty(position = 2 , example ="내용",required = true)
+        @ApiModelProperty(position = 2 , value ="qna 내용",required = true)
         private String contents;
     }
 
@@ -30,10 +30,10 @@ public class QnaRequestDto {
     @Builder
     public static class ModifyCategoryDto {
 
-        @ApiModelProperty(position = 1 , example ="제목",required = true)
+        @ApiModelProperty(position = 1 , value ="qna 제목",required = true)
         private String qnaTitle;
 
-        @ApiModelProperty(position = 2 , example ="내용",required = true)
+        @ApiModelProperty(position = 2 , value ="qna 내용",required = true)
         private String contents;
     }
 }

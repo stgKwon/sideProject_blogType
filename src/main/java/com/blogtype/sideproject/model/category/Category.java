@@ -38,11 +38,11 @@ public class Category {
     @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Board> boardList = new ArrayList<>();
 
-    @Column(name = "mod_time")
+    @Column
     @LastModifiedDate // 수정 시간 자동 업데이트
     private LocalDateTime modTime;
 
-    @Column(name = "reg_time", updatable = false)
+    @Column(updatable = false)
     @CreatedDate // 등록 시간 자동 업데이트
     private LocalDateTime regTime;
 
@@ -55,6 +55,7 @@ public class Category {
     }
 
     public void updateBoardList(Board board){
+        this.boardList = new ArrayList<>(this.boardList); // 스냅샷 생성
         this.boardList.add(board);
     }
 

@@ -19,9 +19,9 @@ public class UserResponseDto {
     @Builder
     public static class TokenInfo implements Serializable {
 
-        @ApiModelProperty(position = 1 , example ="idx",required = true)
+        @ApiModelProperty(position = 1 , value ="유저 idx",required = true)
         private Long userId;
-        @ApiModelProperty(position = 1 , example ="접근 토큰",required = true)
+        @ApiModelProperty(position = 2 , value ="접근 토큰",required = true)
         private String accessToken;
 
         public TokenInfo setAccessToken(Long userId,String accessToken){
@@ -38,19 +38,19 @@ public class UserResponseDto {
     @Builder
     public static class UserInfo implements Serializable {
 
-        @ApiModelProperty(position = 1 , example ="idx",required = true)
+        @ApiModelProperty(position = 1 , value ="유저 idx",required = true)
         private Long userId;
 
-        @ApiModelProperty(position = 2 , example ="유저이름",required = true)
+        @ApiModelProperty(position = 2 , value ="유저이름",required = true)
         private String userName;
 
-        @ApiModelProperty(position = 3 , example ="닉네임",required = true)
+        @ApiModelProperty(position = 3 , value ="닉네임",required = true)
         private String nickName;
 
-        @ApiModelProperty(position = 4 , example ="프로필 이미지 URL",required = true)
+        @ApiModelProperty(position = 4 , value ="프로필 이미지 URL",required = true)
         private String profileImgUrl;
 
-        @ApiModelProperty(position = 5 , example ="자기소개",required = true)
+        @ApiModelProperty(position = 5 , value ="자기소개",required = true)
         private String intro;
 
         public UserResponseDto.UserInfo userConvertToDto(User user){

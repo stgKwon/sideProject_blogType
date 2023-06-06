@@ -38,11 +38,11 @@ public class Qna {
     @NotNull
     private Long userId;
 
-    @Column(name = "mod_time")
+    @Column
     @LastModifiedDate // 수정 시간 자동 업데이트
     private LocalDateTime modTime;
 
-    @Column(name = "reg_time", updatable = false)
+    @Column(updatable = false)
     @CreatedDate // 등록 시간 자동 업데이트
     private LocalDateTime regTime;
 

@@ -24,5 +24,5 @@ public interface UserService {
     /**
      * DESC :: 회원이 글을 작성한 일자와 카운트
      */
-    void findDateByWrite(Long userId) throws Exception;
+    void findWriteDateByUser(Long userId, UserRequestDto.WriteDateRequestDto requestDto) throws Exception;
 }

@@ -17,7 +17,7 @@ public class CategoryRequestDto {
     @Builder
     public static class RequestDto {
 
-        @ApiModelProperty(position = 1 , example ="카테고리 명",required = false)
+        @ApiModelProperty(position = 1 , value ="카테고리 명",required = true)
         private String categoryName;
 
     }
@@ -28,7 +28,7 @@ public class CategoryRequestDto {
     @Builder
     public static class ModifyCategoryDto {
 
-        @ApiModelProperty(position = 1 , example ="카테고리 명",required = false)
+        @ApiModelProperty(position = 1 , value ="카테고리 명",required = true)
         private String categoryName;
 
     }

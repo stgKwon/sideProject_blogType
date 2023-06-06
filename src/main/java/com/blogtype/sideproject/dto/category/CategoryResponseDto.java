@@ -23,16 +23,16 @@ public class CategoryResponseDto {
     @Builder
     public static class ResponseDto {
 
-        @ApiModelProperty(position = 1 , example ="1",required = true)
+        @ApiModelProperty(position = 1 , value ="카테고리 idx",required = true)
         private Long categoryId;
 
-        @ApiModelProperty(position = 2 , example ="1",required = true)
+        @ApiModelProperty(position = 2 , value ="유저 idx",required = true)
         private Long userId;
 
-        @ApiModelProperty(position = 3, example ="카테고리 명",required = true)
+        @ApiModelProperty(position = 3, value ="카테고리 명",required = true)
         private String categoryName;
 
-        @ApiModelProperty(position = 4 , example = "해당 카테고리 게시판 목록 (boardList)",required = true)
+        @ApiModelProperty(position = 4 , value = "해당 카테고리 게시판 목록 (boardList)",required = true)
         private List<BoardResponseDto.ResponseDto> boardList = new ArrayList<>();
 
         public CategoryResponseDto.ResponseDto categoryConvertToDto(Category category, Long userId){

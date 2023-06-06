@@ -17,7 +17,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
 
@@ -59,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void createCategory(Long userId, CategoryRequestDto.RequestDto requestDto) throws Exception {
 
         try{
@@ -70,6 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
     @Override
+    @Transactional
     public void modifyCategory(Long userId , Long categoryId , CategoryRequestDto.ModifyCategoryDto requestDto ) throws Exception {
 
         try{
@@ -86,6 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategory(Long userId , Long categoryId) throws Exception {
 
         try{

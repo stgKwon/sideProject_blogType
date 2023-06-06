@@ -20,7 +20,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
@@ -83,6 +82,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public void createBoard(Long userId, BoardRequestDto.RequestDto requestDto) throws Exception {
         try {
 
@@ -103,6 +103,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public void modifyBoard(Long userId  , Long boardId , BoardRequestDto.ModifyBoardDto requestDto) throws Exception {
 
         try{
@@ -120,6 +121,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public void deleteBoard(Long userId , Long boardId ) throws Exception {
 
         try{

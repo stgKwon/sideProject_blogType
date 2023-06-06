@@ -17,7 +17,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class QnaServiceImpl implements QnaService {
 
     private final QnaRepository qnaRepository;
@@ -60,6 +59,7 @@ public class QnaServiceImpl implements QnaService {
     }
 
     @Override
+    @Transactional
     public List<QnaResponseDto.ResponseDto> findLatestQnaList(Long userId) throws Exception {
         List<QnaResponseDto.ResponseDto> resultList = new ArrayList<>();
         try{
@@ -79,6 +79,7 @@ public class QnaServiceImpl implements QnaService {
     }
 
     @Override
+    @Transactional
     public void createQna(Long userId, QnaRequestDto.RequestDto requestDto) throws Exception{
         try{
             Qna qna = Qna.createQna(userId,requestDto);
@@ -92,6 +93,7 @@ public class QnaServiceImpl implements QnaService {
     }
 
     @Override
+    @Transactional
     public void modifyQna(Long userId, Long qnaId, QnaRequestDto.ModifyCategoryDto requestDto) throws Exception {
         try{
             Optional<Qna> optionalQna = qnaRepository.findQna(userId,qnaId);
@@ -107,6 +109,7 @@ public class QnaServiceImpl implements QnaService {
     }
 
     @Override
+    @Transactional
     public void deleteQna(Long userId, Long qnaId) throws Exception {
         try{
             Optional<Qna> optionalQna = qnaRepository.findQna(userId,qnaId);

@@ -30,7 +30,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -48,6 +47,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public UserResponseDto.TokenInfo kakaoLogin(String code) throws Exception {
         UserResponseDto.TokenInfo result = new UserResponseDto.TokenInfo();
         try {
@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDto.UserInfo findUserInfo(Long userId) throws Exception {
         UserResponseDto.UserInfo result = new UserResponseDto.UserInfo();
         try{
@@ -97,6 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void modifyUserInfo(Long userId , UserRequestDto.ModifyUserDto requestDto, MultipartFile imgFile) throws Exception {
         try{
             Optional<User> optionalUser = userRepository.findUser(userId);
@@ -114,7 +116,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void findDateByWrite(Long userId) throws Exception {
+    @Transactional
+    public void findWriteDateByUser(Long userId, UserRequestDto.WriteDateRequestDto requestDto) throws Exception {
+
+
 
     }
 

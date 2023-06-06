@@ -56,21 +56,21 @@ public class QnaController {
 
     @PostMapping("/create")
     @ApiOperation(value = "QnA 글 생성" , notes = "QnA 글을 생성한다.")
-    public ResponseEntity<ResponseDto> createQna(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody QnaRequestDto.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createQna(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody QnaRequestDto.RequestDto qnaRequestDto) throws Exception {
         log.info("[QnaController] createQna_checkUserId: " + userDetails.getUser().getId());
-        qnaService.createQna(ConvertUtil.findUserId(userDetails),requestDto);
+        qnaService.createQna(ConvertUtil.findUserId(userDetails),qnaRequestDto);
         return ResponseUtils.ok(null);
     }
 
-    @GetMapping("/modify/{qnaId}")
+    @PatchMapping("/modify/{qnaId}")
     @ApiOperation(value = "QnA 글 수정" , notes = "해당 유저의 QnA 글을 수정한다.")
-    public ResponseEntity<ResponseDto> modifyQna(@AuthenticationPrincipal UserDetailsImpl userDetails,  @PathVariable(name = "qnaId") Long qnaId ,@RequestBody QnaRequestDto.ModifyCategoryDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> modifyQna(@AuthenticationPrincipal UserDetailsImpl userDetails,  @PathVariable(name = "qnaId") Long qnaId ,@RequestBody QnaRequestDto.ModifyCategoryDto qnaModRequestDto) throws Exception {
         log.info("[QnaController] modifyQna_checkUserId: " + userDetails.getUser().getId());
-        qnaService.modifyQna(ConvertUtil.findUserId(userDetails) , qnaId, requestDto);
+        qnaService.modifyQna(ConvertUtil.findUserId(userDetails) , qnaId, qnaModRequestDto);
         return ResponseUtils.ok(null);
     }
 
-    @PostMapping("/delete/{qnaId}")
+    @DeleteMapping("/delete/{qnaId}")
     @ApiOperation(value = "QnA 글 삭제" , notes = "QnA 글을 삭제한다.")
     public ResponseEntity<ResponseDto> deleteQna(@AuthenticationPrincipal UserDetailsImpl userDetails,  @PathVariable(name = "qnaId") Long qnaId) throws Exception {
         log.info("[QnaController] deleteQna_checkUserId: " + userDetails.getUser().getId());

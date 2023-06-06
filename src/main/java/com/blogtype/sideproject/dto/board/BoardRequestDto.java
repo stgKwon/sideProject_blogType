@@ -20,13 +20,13 @@ public class BoardRequestDto {
     @Builder
     public static class RequestDto {
 
-        @ApiModelProperty(position = 1 , example ="1",required = true)
+        @ApiModelProperty(position = 1 , value = "카테고리 idx",required = true)
         private Long categoryId;
 
-        @ApiModelProperty(position = 2 , example ="제목",required = true)
+        @ApiModelProperty(position = 2 , value = "게시글 제목",required = true)
         private String boardTitle;
 
-        @ApiModelProperty(position = 3 , example ="내용",required = true)
+        @ApiModelProperty(position = 3 , value = "게시글 내용",required = true)
         private String contents;
     }
 
@@ -37,10 +37,10 @@ public class BoardRequestDto {
     @Builder
     public static class ModifyBoardDto {
 
-        @ApiModelProperty(position = 2 , example ="제목",required = true)
+        @ApiModelProperty(position = 1 , value = "게시글 제목",required = true)
         private String boardTitle;
 
-        @ApiModelProperty(position = 3 , example ="내용",required = true)
+        @ApiModelProperty(position = 2 , value = "게시글 내용",required = true)
         private String contents;
     }
 }

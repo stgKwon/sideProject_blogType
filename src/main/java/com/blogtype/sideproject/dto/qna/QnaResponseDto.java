@@ -26,16 +26,16 @@ public class QnaResponseDto {
     @Builder
     public static class ResponseDto implements Serializable {
 
-        @ApiModelProperty(position = 1, example = "1", required = true)
+        @ApiModelProperty(position = 1, value = "qna idx", required = true)
         private Long qnaId;
 
-        @ApiModelProperty(position = 2, example = "1", required = true)
+        @ApiModelProperty(position = 2, value = "유저 idx", required = true)
         private Long userId;
 
-        @ApiModelProperty(position = 3, example = "제목", required = true)
+        @ApiModelProperty(position = 3, value = "qna 제목", required = true)
         private String qnaTitle;
 
-        @ApiModelProperty(position = 4, example = "내용", required = true)
+        @ApiModelProperty(position = 4, value = "qna 내용", required = true)
         private String contents;
 
         public QnaResponseDto.ResponseDto qnaConvertToDto(Qna qna){

@@ -55,17 +55,17 @@ public class BoardController {
 
     @PostMapping("/create")
     @ApiOperation(value = "블로그 게시글 생성" , notes = "블로그 게시글을 생성한다.")
-    public ResponseEntity<ResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,  @RequestBody BoardRequestDto.RequestDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,  @RequestBody BoardRequestDto.RequestDto boardRequestDto) throws Exception {
         log.info("[BoardController] createBoard_checkUserId: " + userDetails.getUser().getId());
-        boardService.createBoard(ConvertUtil.findUserId(userDetails),requestDto);
+        boardService.createBoard(ConvertUtil.findUserId(userDetails),boardRequestDto);
         return ResponseUtils.ok(null);
     }
 
     @PatchMapping("/modify/{boardId}")
     @ApiOperation(value = "블로그 게시글 수정" , notes = "선택 블로그 내용을 수정한다.")
-    public ResponseEntity<ResponseDto> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId, @RequestBody BoardRequestDto.ModifyBoardDto requestDto) throws Exception {
+    public ResponseEntity<ResponseDto> modifyBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "boardId") Long boardId, @RequestBody BoardRequestDto.ModifyBoardDto boardModRequestDto) throws Exception {
         log.info("[BoardController] modifyBoard_checkUserId: " + userDetails.getUser().getId());
-        boardService.modifyBoard(ConvertUtil.findUserId(userDetails), boardId , requestDto);
+        boardService.modifyBoard(ConvertUtil.findUserId(userDetails), boardId , boardModRequestDto);
         return ResponseUtils.ok(null);
     }
 
