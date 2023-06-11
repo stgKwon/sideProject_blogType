@@ -2,7 +2,6 @@ package com.blogtype.sideproject.model.qna;
 
 
 import com.blogtype.sideproject.dto.qna.QnaRequestDto;
-import com.blogtype.sideproject.dto.qna.QnaResponseDto;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -47,7 +46,7 @@ public class Qna {
     private LocalDateTime regTime;
 
 
-    public static Qna createQna(Long userId , QnaRequestDto.RequestDto requestDto){
+    public static Qna createQna(Long userId , QnaRequestDto.RequestQna requestDto){
         return Qna.builder()
                 .qnaTitle(requestDto.getQnaTitle())
                 .contents(requestDto.getContents())
@@ -55,7 +54,7 @@ public class Qna {
                 .build();
     }
 
-    public void updateQna(QnaRequestDto.ModifyCategoryDto requestDto) {
+    public void updateQna(QnaRequestDto.ModifyQna requestDto) {
         this.qnaTitle = requestDto.getQnaTitle();
         this.contents = requestDto.getContents();
 

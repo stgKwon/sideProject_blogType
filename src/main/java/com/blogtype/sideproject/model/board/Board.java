@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class) // Auditing 리스너 등록
 public class Board {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column
@@ -60,7 +61,7 @@ public class Board {
         }
     }
 
-    public static Board createBoard(Long userId , BoardRequestDto.RequestDto requestDto){
+    public static Board createBoard(Long userId , BoardRequestDto.RequestBoard requestDto){
         return Board.builder()
                 .boardTitle(requestDto.getBoardTitle())
                 .contents(requestDto.getContents())
@@ -68,7 +69,7 @@ public class Board {
                 .build();
     }
 
-    public void updateBoard(BoardRequestDto.ModifyBoardDto requestDto){
+    public void updateBoard(BoardRequestDto.ModifyBoard requestDto){
         this.boardTitle = requestDto.getBoardTitle();
         this.contents = requestDto.getContents();
     }

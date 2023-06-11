@@ -19,10 +19,10 @@ public interface UserService {
     /**
      * DESC :: 회원 정보 수정
      */
-    void modifyUserInfo(Long userId , UserRequestDto.ModifyUserDto requestDto, MultipartFile imgFile) throws Exception;
+    void modifyUser(Long userId , UserRequestDto.ModifyUser requestDto, MultipartFile imgFile) throws Exception;
 
     /**
      * DESC :: 회원이 글을 작성한 일자와 카운트
      */
-    void findWriteDateByUser(Long userId, UserRequestDto.WriteDateRequestDto requestDto) throws Exception;
+    UserResponseDto.ResponseWriteDate findWriteDateByUser(Long userId, UserRequestDto.RequestWriteDate requestDto) throws Exception;
 }

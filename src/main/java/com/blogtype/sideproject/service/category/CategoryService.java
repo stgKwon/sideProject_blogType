@@ -10,22 +10,22 @@ public interface CategoryService {
     /**
      * DESC :: 카테고리 전체 목록 조회
      */
-    List<CategoryResponseDto.ResponseDto> findAllCategoryList(Long userId) throws Exception;
+    List<CategoryResponseDto.ResponseCategory> findAllCategoryList(Long userId) throws Exception;
 
     /**
      * DESC :: 카테고리 전체 목록 조회
      */
-    CategoryResponseDto.ResponseDto findCategory(Long userId, Long categoryId) throws Exception;
+    CategoryResponseDto.ResponseCategory findCategory(Long userId, Long categoryId) throws Exception;
 
     /**
      * DESC :: 카테고리 게시글 생성
      */
-    void createCategory(Long userId,  CategoryRequestDto.RequestDto requestDto) throws Exception;
+    void createCategory(Long userId,  CategoryRequestDto.RequestCategory requestDto) throws Exception;
 
     /**
      * DESC :: 카테고리 게시글 수정
      */
-    void modifyCategory(Long userId , Long categoryId , CategoryRequestDto.ModifyCategoryDto requestDto) throws Exception;
+    void modifyCategory(Long userId , Long categoryId , CategoryRequestDto.ModifyCategory requestDto) throws Exception;
 
     /**
      * DESC :: 카테고리 게시글 삭제

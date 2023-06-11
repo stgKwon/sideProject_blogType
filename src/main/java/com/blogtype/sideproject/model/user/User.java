@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class) // Auditing 리스너 등록
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column
@@ -63,7 +64,7 @@ public class User {
                 .build();
     }
 
-    public void updateUser(UserRequestDto.ModifyUserDto userInfo){
+    public void updateUser(UserRequestDto.ModifyUser userInfo){
         this.nickName = userInfo.getNickName();
         this.intro = userInfo.getIntro();
         this.profileImgUrl = userInfo.getUpdateImgUrl();

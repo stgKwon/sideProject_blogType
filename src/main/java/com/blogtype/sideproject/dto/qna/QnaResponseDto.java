@@ -1,6 +1,7 @@
 package com.blogtype.sideproject.dto.qna;
 
 
+import com.blogtype.sideproject.dto.common.ResponseDto;
 import com.blogtype.sideproject.model.qna.Qna;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +25,7 @@ public class QnaResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ResponseDto implements Serializable {
+    public static class ResponseQna implements Serializable {
 
         @ApiModelProperty(position = 1, value = "qna idx", required = true)
         private Long qnaId;
@@ -38,8 +39,8 @@ public class QnaResponseDto {
         @ApiModelProperty(position = 4, value = "qna 내용", required = true)
         private String contents;
 
-        public QnaResponseDto.ResponseDto qnaConvertToDto(Qna qna){
-            return ResponseDto.builder()
+        public QnaResponseDto.ResponseQna qnaConvertToDto(Qna qna){
+            return ResponseQna.builder()
                     .qnaId(qna.getId())
                     .userId(qna.getUserId())
                     .qnaTitle(qna.getQnaTitle())
@@ -47,11 +48,11 @@ public class QnaResponseDto {
                     .build();
         }
 
-        public List<QnaResponseDto.ResponseDto> qnaConvertToDtoList(List<Qna> qnaList) {
-            List<QnaResponseDto.ResponseDto> qnaDtoList = new ArrayList<>();
+        public List<QnaResponseDto.ResponseQna> qnaConvertToDtoList(List<Qna> qnaList) {
+            List<QnaResponseDto.ResponseQna> qnaDtoList = new ArrayList<>();
 
             for (Qna qna : qnaList) {
-                QnaResponseDto.ResponseDto qnaDto = QnaResponseDto.ResponseDto.builder()
+                QnaResponseDto.ResponseQna qnaDto = QnaResponseDto.ResponseQna.builder()
                         .qnaId(qna.getId())
                         .userId(qna.getUserId())
                         .qnaTitle(qna.getQnaTitle())

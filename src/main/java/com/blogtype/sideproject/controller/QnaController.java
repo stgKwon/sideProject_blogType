@@ -34,7 +34,7 @@ public class QnaController {
     @ApiOperation(value = "QnA 전체 목록 조회" , notes = "전체 블로그 내용을 조회한다.")
     public ResponseEntity<ResponseDto> findAllQnaList(@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         log.info("[QnaController] findAllQnaList_checkUserId: " + userDetails.getUser().getId());
-        List<QnaResponseDto.ResponseDto> resultList = qnaService.findAllQnaList(ConvertUtil.findUserId(userDetails));
+        List<QnaResponseDto.ResponseQna> resultList = qnaService.findAllQnaList(ConvertUtil.findUserId(userDetails));
         return ResponseUtils.ok(resultList);
     }
 
@@ -42,7 +42,7 @@ public class QnaController {
     @ApiOperation(value = "QnA 조회" , notes = "선택 QnA 내용을 조회한다.")
     public ResponseEntity<ResponseDto> findQna(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable(name = "qnaId") Long qnaId) throws Exception {
         log.info("[QnaController] findQna_checkUserId: " + userDetails.getUser().getId());
-        QnaResponseDto.ResponseDto result = qnaService.findQna(ConvertUtil.findUserId(userDetails),qnaId);
+        QnaResponseDto.ResponseQna result = qnaService.findQna(ConvertUtil.findUserId(userDetails),qnaId);
         return ResponseUtils.ok(result);
     }
 
@@ -50,13 +50,13 @@ public class QnaController {
     @ApiOperation(value = "QnA 글 최신순 조회" , notes = "해당 유저의 QnA 를 최신순 4개를 조회한다.")
     public ResponseEntity<ResponseDto> findLatestQnaList(@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         log.info("[QnaController] findLatestQnaList_checkUserId: " + userDetails.getUser().getId());
-        List<QnaResponseDto.ResponseDto> resultList = qnaService.findLatestQnaList(ConvertUtil.findUserId(userDetails));
+        List<QnaResponseDto.ResponseQna> resultList = qnaService.findLatestQnaList(ConvertUtil.findUserId(userDetails));
         return ResponseUtils.ok(resultList);
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "QnA 글 생성" , notes = "QnA 글을 생성한다.")
-    public ResponseEntity<ResponseDto> createQna(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody QnaRequestDto.RequestDto qnaRequestDto) throws Exception {
+    public ResponseEntity<ResponseDto> createQna(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody QnaRequestDto.RequestQna qnaRequestDto) throws Exception {
         log.info("[QnaController] createQna_checkUserId: " + userDetails.getUser().getId());
         qnaService.createQna(ConvertUtil.findUserId(userDetails),qnaRequestDto);
         return ResponseUtils.ok(null);
@@ -64,7 +64,7 @@ public class QnaController {
 
     @PatchMapping("/modify/{qnaId}")
     @ApiOperation(value = "QnA 글 수정" , notes = "해당 유저의 QnA 글을 수정한다.")
-    public ResponseEntity<ResponseDto> modifyQna(@AuthenticationPrincipal UserDetailsImpl userDetails,  @PathVariable(name = "qnaId") Long qnaId ,@RequestBody QnaRequestDto.ModifyCategoryDto qnaModRequestDto) throws Exception {
+    public ResponseEntity<ResponseDto> modifyQna(@AuthenticationPrincipal UserDetailsImpl userDetails,  @PathVariable(name = "qnaId") Long qnaId ,@RequestBody QnaRequestDto.ModifyQna qnaModRequestDto) throws Exception {
         log.info("[QnaController] modifyQna_checkUserId: " + userDetails.getUser().getId());
         qnaService.modifyQna(ConvertUtil.findUserId(userDetails) , qnaId, qnaModRequestDto);
         return ResponseUtils.ok(null);

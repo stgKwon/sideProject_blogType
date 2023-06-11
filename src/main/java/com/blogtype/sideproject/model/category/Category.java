@@ -24,7 +24,8 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class) // Auditing 리스너 등록
 public class Category {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column
@@ -47,19 +48,15 @@ public class Category {
     private LocalDateTime regTime;
 
 
-    public static Category createCategory(Long userId , CategoryRequestDto.RequestDto requestDto){
+    public static Category createCategory(Long userId , CategoryRequestDto.RequestCategory requestDto){
         return Category.builder()
                 .userId(userId)
                 .categoryName(requestDto.getCategoryName())
                 .build();
     }
 
-    public void updateBoardList(Board board){
-        this.boardList = new ArrayList<>(this.boardList); // 스냅샷 생성
-        this.boardList.add(board);
-    }
 
-    public void updateCategory(CategoryRequestDto.ModifyCategoryDto requestDto){
+    public void updateCategory(CategoryRequestDto.ModifyCategory requestDto){
         this.categoryName = requestDto.getCategoryName();
 
     }

@@ -11,6 +11,6 @@ public interface CategoryCustomRepository {
 
     Optional<List<Category>> findAllCategoryList(Long userId);
 
-    Optional<Category> findCategory(Long categoryId, Long userId);
+    Optional<Category> findCategory(Long userId, Long categoryId);
 
 }

@@ -21,7 +21,7 @@ public class CategoryResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ResponseDto {
+    public static class ResponseCategory {
 
         @ApiModelProperty(position = 1 , value ="카테고리 idx",required = true)
         private Long categoryId;
@@ -33,23 +33,23 @@ public class CategoryResponseDto {
         private String categoryName;
 
         @ApiModelProperty(position = 4 , value = "해당 카테고리 게시판 목록 (boardList)",required = true)
-        private List<BoardResponseDto.ResponseDto> boardList = new ArrayList<>();
+        private List<BoardResponseDto.ResponseBoard> boardList = new ArrayList<>();
 
-        public CategoryResponseDto.ResponseDto categoryConvertToDto(Category category, Long userId){
-            return ResponseDto.builder()
+        public CategoryResponseDto.ResponseCategory categoryConvertToDto(Category category, Long userId){
+            return ResponseCategory.builder()
                     .categoryId(category.getId())
                     .userId(userId)
                     .categoryName(category.getCategoryName())
-                    .boardList(mapBoardList(category.getBoardList()))
+                    .boardList(mapBoardList(category.getBoardList(),userId))
                     .build();
         }
 
-        public List<CategoryResponseDto.ResponseDto> categoryConvertToDtoList(List<Category> categoryList, Long userId) {
-            List<CategoryResponseDto.ResponseDto> categoryDtoList = new ArrayList<>();
+        public List<CategoryResponseDto.ResponseCategory> categoryConvertToDtoList(List<Category> categoryList, Long userId) {
+            List<CategoryResponseDto.ResponseCategory> categoryDtoList = new ArrayList<>();
             for (Category category : categoryList) {
-                List<BoardResponseDto.ResponseDto> boardDtoList = mapBoardList(category.getBoardList());
+                List<BoardResponseDto.ResponseBoard> boardDtoList = mapBoardList(category.getBoardList(),userId);
 
-                CategoryResponseDto.ResponseDto categoryDto = CategoryResponseDto.ResponseDto.builder()
+                CategoryResponseDto.ResponseCategory categoryDto = CategoryResponseDto.ResponseCategory.builder()
                         .categoryId(category.getId())
                         .userId(userId)
                         .categoryName(category.getCategoryName())
@@ -60,13 +60,14 @@ public class CategoryResponseDto {
             return categoryDtoList;
         }
 
-        private List<BoardResponseDto.ResponseDto> mapBoardList(List<Board> boardList) {
-            List<BoardResponseDto.ResponseDto> boardDtoList = new ArrayList<>();
+        private List<BoardResponseDto.ResponseBoard> mapBoardList(List<Board> boardList, Long userId) {
+            List<BoardResponseDto.ResponseBoard> boardDtoList = new ArrayList<>();
             if (boardList != null && !boardList.isEmpty()) {
                 for (Board board : boardList) {
-                    BoardResponseDto.ResponseDto boardDto = BoardResponseDto.ResponseDto.builder()
+                    BoardResponseDto.ResponseBoard boardDto = BoardResponseDto.ResponseBoard.builder()
                             .boardId(board.getId())
                             .categoryId(board.getCategory() != null ? board.getCategory().getId() : null)
+                            .userId(userId)
                             .boardTitle(board.getBoardTitle())
                             .contents(board.getContents())
                             .build();

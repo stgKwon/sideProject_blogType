@@ -15,7 +15,7 @@ public class CategoryRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class RequestDto {
+    public static class RequestCategory {
 
         @ApiModelProperty(position = 1 , value ="카테고리 명",required = true)
         private String categoryName;
@@ -26,7 +26,7 @@ public class CategoryRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ModifyCategoryDto {
+    public static class ModifyCategory {
 
         @ApiModelProperty(position = 1 , value ="카테고리 명",required = true)
         private String categoryName;

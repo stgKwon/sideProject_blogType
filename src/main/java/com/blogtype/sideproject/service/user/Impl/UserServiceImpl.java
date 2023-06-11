@@ -10,6 +10,7 @@ import com.blogtype.sideproject.util.constants.StringConstant;
 import com.blogtype.sideproject.util.security.jwt.JwtTokenProvider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -44,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private String redirect_uri;
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
 
     @Override
@@ -99,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void modifyUserInfo(Long userId , UserRequestDto.ModifyUserDto requestDto, MultipartFile imgFile) throws Exception {
+    public void modifyUser(Long userId , UserRequestDto.ModifyUser requestDto, MultipartFile imgFile) throws Exception {
         try{
             Optional<User> optionalUser = userRepository.findUser(userId);
             //FIXME :: 수정 시 , 기존 원본 이미지 삭제 처리 필요
@@ -117,10 +120,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void findWriteDateByUser(Long userId, UserRequestDto.WriteDateRequestDto requestDto) throws Exception {
+    public UserResponseDto.ResponseWriteDate findWriteDateByUser(Long userId, UserRequestDto.RequestWriteDate requestDto) throws Exception {
+        UserResponseDto.ResponseWriteDate result = new UserResponseDto.ResponseWriteDate();
+
+        try {
+
+        }catch (Exception e){
+
+        }
 
 
-
+        return result;
     }
 
     // 카카오 접근 토큰 발급 요청

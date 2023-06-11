@@ -23,7 +23,7 @@ public class BoardResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ResponseDto implements Serializable {
+    public static class ResponseBoard implements Serializable {
 
         @ApiModelProperty(position = 1 , value ="게시글 idx",required = true)
         private Long boardId;
@@ -40,8 +40,8 @@ public class BoardResponseDto {
         @ApiModelProperty(position = 5 , value = "게시글 내용",required = true)
         private String contents;
 
-        public BoardResponseDto.ResponseDto boardConvertToDto(Board board){
-            return BoardResponseDto.ResponseDto.builder()
+        public BoardResponseDto.ResponseBoard boardConvertToDto(Board board){
+            return BoardResponseDto.ResponseBoard.builder()
                     .boardId(board.getId())
                     .categoryId(board.getCategory() != null ? board.getCategory().getId() : null)
                     .userId(board.getUserId())
@@ -50,11 +50,11 @@ public class BoardResponseDto {
                     .build();
         }
 
-        public List<BoardResponseDto.ResponseDto> boardConvertToDtoList(List<Board> boardList) {
-            List<BoardResponseDto.ResponseDto> boardDtoList = new ArrayList<>();
+        public List<BoardResponseDto.ResponseBoard> boardConvertToDtoList(List<Board> boardList) {
+            List<BoardResponseDto.ResponseBoard> boardDtoList = new ArrayList<>();
 
             for (Board board : boardList) {
-                BoardResponseDto.ResponseDto boardDto = BoardResponseDto.ResponseDto.builder()
+                BoardResponseDto.ResponseBoard boardDto = BoardResponseDto.ResponseBoard.builder()
                         .boardId(board.getId())
                         .categoryId(board.getCategory() != null ? board.getCategory().getId() : null)
                         .userId(board.getUserId())

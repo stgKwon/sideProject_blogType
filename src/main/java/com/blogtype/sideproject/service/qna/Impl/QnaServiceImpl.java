@@ -5,6 +5,8 @@ import com.blogtype.sideproject.dto.qna.QnaResponseDto;
 import com.blogtype.sideproject.model.qna.Qna;
 import com.blogtype.sideproject.repository.qna.QnaRepository;
 import com.blogtype.sideproject.service.qna.QnaService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,15 +23,17 @@ public class QnaServiceImpl implements QnaService {
 
     private final QnaRepository qnaRepository;
 
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+
     @Override
     @Transactional(readOnly = true)
-    public List<QnaResponseDto.ResponseDto> findAllQnaList(Long userId) throws Exception {
-        List<QnaResponseDto.ResponseDto> resultList = new ArrayList<>();
+    public List<QnaResponseDto.ResponseQna> findAllQnaList(Long userId) throws Exception {
+        List<QnaResponseDto.ResponseQna> resultList = new ArrayList<>();
         try{
             Optional<List<Qna>> optionalQnaList = qnaRepository.findAllQnaList();
             if (optionalQnaList.isPresent()){
                 List<Qna> findAllQnaList = optionalQnaList.get();
-                resultList = new QnaResponseDto.ResponseDto().qnaConvertToDtoList(findAllQnaList);
+                resultList = new QnaResponseDto.ResponseQna().qnaConvertToDtoList(findAllQnaList);
 
             }
 
@@ -42,13 +46,13 @@ public class QnaServiceImpl implements QnaService {
 
     @Override
     @Transactional(readOnly = true)
-    public QnaResponseDto.ResponseDto findQna(Long userId, Long qnaId) throws Exception {
-        QnaResponseDto.ResponseDto result = new QnaResponseDto.ResponseDto();
+    public QnaResponseDto.ResponseQna findQna(Long userId, Long qnaId) throws Exception {
+        QnaResponseDto.ResponseQna result = new QnaResponseDto.ResponseQna();
         try{
             Optional<Qna> optionalQna = qnaRepository.findQna(userId,qnaId);
             if (optionalQna.isPresent()){
                 Qna findQna = optionalQna.get();
-                result = new QnaResponseDto.ResponseDto().qnaConvertToDto(findQna);
+                result = new QnaResponseDto.ResponseQna().qnaConvertToDto(findQna);
             }
 
         }catch (Exception e){
@@ -60,13 +64,13 @@ public class QnaServiceImpl implements QnaService {
 
     @Override
     @Transactional
-    public List<QnaResponseDto.ResponseDto> findLatestQnaList(Long userId) throws Exception {
-        List<QnaResponseDto.ResponseDto> resultList = new ArrayList<>();
+    public List<QnaResponseDto.ResponseQna> findLatestQnaList(Long userId) throws Exception {
+        List<QnaResponseDto.ResponseQna> resultList = new ArrayList<>();
         try{
             Optional<List<Qna>> optionalLatestQnaList = qnaRepository.findLatestQnaList(userId);
             if (optionalLatestQnaList.isPresent()){
                 List<Qna> findLatestQnaList = optionalLatestQnaList.get();
-                resultList = new QnaResponseDto.ResponseDto().qnaConvertToDtoList(findLatestQnaList);
+                resultList = new QnaResponseDto.ResponseQna().qnaConvertToDtoList(findLatestQnaList);
 
             }
 
@@ -80,7 +84,7 @@ public class QnaServiceImpl implements QnaService {
 
     @Override
     @Transactional
-    public void createQna(Long userId, QnaRequestDto.RequestDto requestDto) throws Exception{
+    public void createQna(Long userId, QnaRequestDto.RequestQna requestDto) throws Exception{
         try{
             Qna qna = Qna.createQna(userId,requestDto);
             qnaRepository.save(qna);
@@ -94,7 +98,7 @@ public class QnaServiceImpl implements QnaService {
 
     @Override
     @Transactional
-    public void modifyQna(Long userId, Long qnaId, QnaRequestDto.ModifyCategoryDto requestDto) throws Exception {
+    public void modifyQna(Long userId, Long qnaId, QnaRequestDto.ModifyQna requestDto) throws Exception {
         try{
             Optional<Qna> optionalQna = qnaRepository.findQna(userId,qnaId);
             if (optionalQna.isPresent()){

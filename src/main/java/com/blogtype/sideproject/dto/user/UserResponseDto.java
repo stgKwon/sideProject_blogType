@@ -93,7 +93,7 @@ public class UserResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class WriteDateResponseDto implements Serializable{
+    public static class ResponseWriteDate implements Serializable{
 
         @ApiModelProperty(position = 1 , example ="20230518",required = false)
         private String writeDate;

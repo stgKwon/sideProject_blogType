@@ -2,6 +2,7 @@ package com.blogtype.sideproject.dto.board;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +19,9 @@ public class BoardRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class RequestDto {
+    public static class RequestBoard {
 
-        @ApiModelProperty(position = 1 , value = "카테고리 idx",required = true)
+        @ApiModelProperty(position = 1 ,  value = "카테고리 idx",required = true)
         private Long categoryId;
 
         @ApiModelProperty(position = 2 , value = "게시글 제목",required = true)
@@ -35,7 +36,7 @@ public class BoardRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ModifyBoardDto {
+    public static class ModifyBoard {
 
         @ApiModelProperty(position = 1 , value = "게시글 제목",required = true)
         private String boardTitle;

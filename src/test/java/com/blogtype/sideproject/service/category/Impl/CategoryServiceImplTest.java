@@ -32,16 +32,16 @@ class CategoryServiceImplTest {
     @Transactional
     void findAllCategoryList() {
 
-        List<CategoryResponseDto.ResponseDto> resultList = new ArrayList<>();
+        List<CategoryResponseDto.ResponseCategory> resultList = new ArrayList<>();
         try {
             Long userId = 1L;
             Optional<List<Category>> optionalCategoryList = categoryRepository.findAllCategoryList(userId);
             if (optionalCategoryList.isPresent()) {
                 List<Category> findAllCategoryList = optionalCategoryList.get();
-                resultList = new CategoryResponseDto.ResponseDto().categoryConvertToDtoList(findAllCategoryList,userId);
+                resultList = new CategoryResponseDto.ResponseCategory().categoryConvertToDtoList(findAllCategoryList,userId);
             }
             resultList.forEach(f -> {
-                System.out.println("야야야야ㅑ야야야야야"+ f.getCategoryName());
+                System.out.println("테스트"+ f.getCategoryName());
             });
 
         }catch (Exception e){

@@ -26,10 +26,10 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
     }
 
     @Override
-    public Optional<Category> findCategory(Long categoryId, Long userId) {
+    public Optional<Category> findCategory(Long userId, Long categoryId) {
         return Optional.ofNullable(entityManager.createQuery("SELECT c FROM Category AS c WHERE c.Id =:categoryId AND c.userId =:userId", Category.class)
-                .setParameter("categoryId",categoryId)
                 .setParameter("userId",userId)
+                .setParameter("categoryId",categoryId)
                 .getSingleResult());
     }
 }

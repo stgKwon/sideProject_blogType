@@ -17,7 +17,7 @@ public class UserRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ModifyUserDto {
+    public static class ModifyUser {
 
         @ApiModelProperty(position = 1 , value ="유저 닉네임",required = false)
         private String nickName;
@@ -40,7 +40,7 @@ public class UserRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class WriteDateRequestDto {
+    public static class RequestWriteDate {
 
         @ApiModelProperty(position = 1 , value ="20230518",required = false)
         private String startDate;

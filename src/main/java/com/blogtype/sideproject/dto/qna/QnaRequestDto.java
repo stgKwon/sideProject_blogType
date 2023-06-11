@@ -14,7 +14,7 @@ public class QnaRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class RequestDto {
+    public static class RequestQna {
 
         @ApiModelProperty(position = 1 , value ="qna 제목",required = true)
         private String qnaTitle;
@@ -28,7 +28,7 @@ public class QnaRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ModifyCategoryDto {
+    public static class ModifyQna {
 
         @ApiModelProperty(position = 1 , value ="qna 제목",required = true)
         private String qnaTitle;

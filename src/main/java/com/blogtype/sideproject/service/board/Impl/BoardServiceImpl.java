@@ -7,6 +7,8 @@ import com.blogtype.sideproject.model.category.Category;
 import com.blogtype.sideproject.repository.board.BoardRepository;
 import com.blogtype.sideproject.repository.category.CategoryRepository;
 import com.blogtype.sideproject.service.board.BoardService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,16 +27,18 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
 
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto.ResponseDto> findAllBoardList() throws Exception {
-        List<BoardResponseDto.ResponseDto> resultList = new ArrayList<>();
+    public List<BoardResponseDto.ResponseBoard> findAllBoardList() throws Exception {
+        List<BoardResponseDto.ResponseBoard> resultList = new ArrayList<>();
         try {
             // FIXME :: NULL 체크 필요 !
             Optional<List<Board>> optionalBoardList = boardRepository.findAllBoardList();
             if (optionalBoardList.isPresent()){
                 List<Board> findAllBoardList = optionalBoardList.get();
-                resultList = new BoardResponseDto.ResponseDto().boardConvertToDtoList(findAllBoardList);
+                resultList = new BoardResponseDto.ResponseBoard().boardConvertToDtoList(findAllBoardList);
 
             }
 
@@ -47,13 +51,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public BoardResponseDto.ResponseDto findBoard(Long userId, Long boardId) throws Exception {
-       BoardResponseDto.ResponseDto result = new BoardResponseDto.ResponseDto();
+    public BoardResponseDto.ResponseBoard findBoard(Long userId, Long boardId) throws Exception {
+       BoardResponseDto.ResponseBoard result = new BoardResponseDto.ResponseBoard();
         try {
             Optional<Board> optionalBoard = boardRepository.findBoard(userId,boardId);
             if (optionalBoard.isPresent()) {
                 Board findBoard = optionalBoard.get();
-                result = new BoardResponseDto.ResponseDto().boardConvertToDto(findBoard);
+                result = new BoardResponseDto.ResponseBoard().boardConvertToDto(findBoard);
             }
         }catch (Exception e){
             log.error("[BoardService] findBoard :: " , e);
@@ -64,13 +68,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public  List<BoardResponseDto.ResponseDto> findLatestBoardList(Long userId) throws Exception {
-        List<BoardResponseDto.ResponseDto> resultList = new ArrayList<>();
+    public  List<BoardResponseDto.ResponseBoard> findLatestBoardList(Long userId) throws Exception {
+        List<BoardResponseDto.ResponseBoard> resultList = new ArrayList<>();
         try {
             Optional<List<Board>> optionalLatestBoardList = boardRepository.findLatestBoardList(userId);
             if (optionalLatestBoardList.isPresent()){
                 List<Board> findAllBoardList = optionalLatestBoardList.get();
-                resultList = new BoardResponseDto.ResponseDto().boardConvertToDtoList(findAllBoardList);
+                resultList = new BoardResponseDto.ResponseBoard().boardConvertToDtoList(findAllBoardList);
 
             }
 
@@ -83,17 +87,17 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void createBoard(Long userId, BoardRequestDto.RequestDto requestDto) throws Exception {
+    public void createBoard(Long userId, BoardRequestDto.RequestBoard requestDto) throws Exception {
         try {
 
-            Board board = Board.createBoard(userId, requestDto);
-            boardRepository.save(board);
-            // FIXME :: 좀 더 생각해봐야할 듯 싶다...
+            Board board = Board.createBoard(userId, requestDto); // board 객체 생성
             Optional<Category> optionalCategory = categoryRepository.findCategory(userId,requestDto.getCategoryId());
-            if (optionalCategory.isPresent()){
+            if (optionalCategory.isPresent()){ // 카테고리가 없을 경우에 대한 exception 추가 필요
                 Category findCategory = optionalCategory.get();
-                findCategory.updateBoardList(board);
+                board.setCategory(findCategory);
+                boardRepository.save(board);
             }
+
 
         }catch (Exception e){
             log.error("[BoardService] createBoard :: " , e);
@@ -104,7 +108,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void modifyBoard(Long userId  , Long boardId , BoardRequestDto.ModifyBoardDto requestDto) throws Exception {
+    public void modifyBoard(Long userId  , Long boardId , BoardRequestDto.ModifyBoard requestDto) throws Exception {
 
         try{
             Optional<Board> optionalBoard = boardRepository.findBoard(userId, boardId);

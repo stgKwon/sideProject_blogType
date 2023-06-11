@@ -5,6 +5,8 @@ import com.blogtype.sideproject.dto.category.CategoryResponseDto;
 import com.blogtype.sideproject.model.category.Category;
 import com.blogtype.sideproject.repository.category.CategoryRepository;
 import com.blogtype.sideproject.service.category.CategoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,15 +24,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryResponseDto.ResponseDto> findAllCategoryList(Long userId) throws Exception {
-        List<CategoryResponseDto.ResponseDto> resultList = new ArrayList<>();
+    public List<CategoryResponseDto.ResponseCategory> findAllCategoryList(Long userId) throws Exception {
+        List<CategoryResponseDto.ResponseCategory> resultList = new ArrayList<>();
         try {
             Optional<List<Category>> optionalCategoryList = categoryRepository.findAllCategoryList(userId);
             if (optionalCategoryList.isPresent()) {
                 List<Category> findAllCategoryList = optionalCategoryList.get();
-                resultList = new CategoryResponseDto.ResponseDto().categoryConvertToDtoList(findAllCategoryList,userId);
+                resultList = new CategoryResponseDto.ResponseCategory().categoryConvertToDtoList(findAllCategoryList,userId);
             }
 
         }catch (Exception e){
@@ -42,13 +46,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryResponseDto.ResponseDto findCategory(Long userId, Long categoryId) throws Exception {
-        CategoryResponseDto.ResponseDto result = new CategoryResponseDto.ResponseDto();
+    public CategoryResponseDto.ResponseCategory findCategory(Long userId, Long categoryId) throws Exception {
+        CategoryResponseDto.ResponseCategory result = new CategoryResponseDto.ResponseCategory();
         try{
             Optional<Category> optionalCategory = categoryRepository.findCategory(categoryId,userId);
             if (optionalCategory.isPresent()) {
                 Category category = optionalCategory.get();
-                result = new CategoryResponseDto.ResponseDto().categoryConvertToDto(category, userId);
+                result = new CategoryResponseDto.ResponseCategory().categoryConvertToDto(category, userId);
             }
         }catch (Exception e){
             log.error("[CategoryService] findCategory :: " , e);
@@ -59,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public void createCategory(Long userId, CategoryRequestDto.RequestDto requestDto) throws Exception {
+    public void createCategory(Long userId, CategoryRequestDto.RequestCategory requestDto) throws Exception {
 
         try{
             Category category = Category.createCategory(userId,requestDto);
@@ -71,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
     @Override
     @Transactional
-    public void modifyCategory(Long userId , Long categoryId , CategoryRequestDto.ModifyCategoryDto requestDto ) throws Exception {
+    public void modifyCategory(Long userId , Long categoryId , CategoryRequestDto.ModifyCategory requestDto ) throws Exception {
 
         try{
             Optional<Category> optionalCategory = categoryRepository.findCategory(userId, categoryId);
